@@ -27,3 +27,6 @@ yarn-error.log
 ray.php
 .husky/pre-commit
 ssh-key-*.key
+sync-env.sh
+admin-tools.sh
+docs/
