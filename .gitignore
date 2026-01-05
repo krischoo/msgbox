@@ -26,3 +26,4 @@ yarn-error.log
 .phpunit.result.cache
 ray.php
 .husky/pre-commit
+ssh-key-*.key
