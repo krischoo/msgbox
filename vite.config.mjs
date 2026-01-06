@@ -6,7 +6,7 @@ import { resolve } from 'path'
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), 'APP_URL')
-  const host = env.APP_URL.replace(/https?:\/\//, '')
+  const host = env.APP_URL?.replace(/https?:\/\//, '') || 'localhost'
   return {
     server: {
       host: host,
