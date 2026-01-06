@@ -50,6 +50,7 @@ class HandleInertiaRequests extends Middleware
                     'default_recipient_id' => $user->default_recipient_id,
                     'default_username_id' => $user->default_username_id,
                     'darkMode' => $user->dark_mode,
+                    'locale' => $user->locale ?? 'ko',
                 ];
             },
             'errorBags' => function () {
@@ -59,6 +60,7 @@ class HandleInertiaRequests extends Middleware
             },
             'version' => GitVersionHelper::version(),
             'updateAvailable' => GitVersionHelper::updateAvailable(),
+            'locale' => fn () => $request->user()?->locale ?? 'ko',
         ]);
     }
 }

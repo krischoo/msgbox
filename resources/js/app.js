@@ -16,6 +16,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { ZiggyVue } from 'ziggy-js'
 import Notifications from '@kyvg/vue3-notification'
+import i18n, { setLocale } from './i18n'
 
 // Styles
 import 'tippy.js/dist/svg-arrow.css'
@@ -50,6 +51,13 @@ createInertiaApp({
     addy.use(plugin)
     addy.use(ZiggyVue)
     addy.use(Notifications)
+    addy.use(i18n)
+
+    // 사용자 locale 설정 (Inertia props에서 읽기)
+    const userLocale = props.initialPage?.props?.locale
+    if (userLocale) {
+      setLocale(userLocale)
+    }
 
     addy.component('Icon', Icon)
     addy.component('Loader', Loader)
