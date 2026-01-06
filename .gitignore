@@ -34,3 +34,8 @@ docs/
 CLAUDE.md
 .claude/
 .serena/
+.config
+.gnupg
+TODO.md
+storage/framework/views/*.php
+storage/logs/*.log
