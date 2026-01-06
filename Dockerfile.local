@@ -1,0 +1,76 @@
+# msgbox 로컬 개발용 Dockerfile
+# Laravel 12 + PHP 8.2 + Nginx
+
+FROM php:8.2-fpm-alpine
+
+# 필수 패키지 설치
+RUN apk add --no-cache \
+    nginx \
+    supervisor \
+    nodejs \
+    npm \
+    git \
+    curl \
+    zip \
+    unzip \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    freetype-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    icu-dev \
+    mysql-client
+
+# PHP 확장 설치
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        xml \
+        bcmath \
+        gd \
+        intl \
+        opcache
+
+# Redis 확장 설치
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps
+
+# Composer 설치
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# 작업 디렉토리 설정
+WORKDIR /var/www/html
+
+# Nginx 설정
+COPY docker/nginx.local.conf /etc/nginx/http.d/default.conf
+
+# PHP-FPM 설정 (TCP 소켓 사용)
+RUN sed -i 's/user = www-data/user = nginx/' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/group = www-data/group = nginx/' /usr/local/etc/php-fpm.d/www.conf
+
+# Supervisor 설정
+COPY docker/supervisord.local.conf /etc/supervisord.conf
+
+# PHP 설정
+RUN echo "upload_max_filesize = 50M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "post_max_size = 50M" >> /usr/local/etc/php/conf.d/uploads.ini \
+    && echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/memory.ini
+
+# 필요한 디렉토리 생성 및 권한 설정
+RUN mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/storage/framework/cache \
+    && mkdir -p /var/www/html/storage/framework/sessions \
+    && mkdir -p /var/www/html/storage/framework/views \
+    && mkdir -p /var/www/html/bootstrap/cache \
+    && chown -R nginx:nginx /var/www/html
+
+# 포트 노출
+EXPOSE 8000
+
+# 시작 명령
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

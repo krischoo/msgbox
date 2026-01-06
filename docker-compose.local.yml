@@ -1,0 +1,76 @@
+# 로컬 개발용 Docker Compose 설정
+# 사용법: docker compose -f docker-compose.local.yml up -d
+
+services:
+  # MariaDB 데이터베이스
+  msgbox-db:
+    image: mariadb:10
+    container_name: msgbox-db
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - msgbox-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=localpassword
+      - MYSQL_DATABASE=anonaddy
+      - MYSQL_USER=anonaddy
+      - MYSQL_PASSWORD=localpassword
+    ports:
+      - "3307:3306"  # 기존 MySQL과 충돌 방지
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis 캐시/세션
+  msgbox-redis:
+    image: redis:7-alpine
+    container_name: msgbox-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"  # 기존 Redis와 충돌 방지
+
+  # 메인 애플리케이션 (커스텀 이미지)
+  msgbox-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    image: msgbox-local:latest
+    container_name: msgbox-app
+    restart: unless-stopped
+    depends_on:
+      msgbox-db:
+        condition: service_healthy
+      msgbox-redis:
+        condition: service_started
+    ports:
+      - "8000:8000"
+    volumes:
+      # 소스 코드 마운트
+      - .:/var/www/html
+      # vendor와 node_modules는 컨테이너 내부 볼륨 사용 (성능 향상)
+      # - msgbox-vendor:/var/www/html/vendor
+      # - msgbox-node-modules:/var/www/html/node_modules
+    env_file:
+      - .env.local
+    environment:
+      # 데이터베이스 연결
+      - DB_HOST=msgbox-db
+      - DB_PORT=3306
+      - DB_DATABASE=anonaddy
+      - DB_USERNAME=anonaddy
+      - DB_PASSWORD=localpassword
+      # Redis 연결
+      - REDIS_HOST=msgbox-redis
+      - REDIS_PORT=6379
+
+volumes:
+  msgbox-db-data:
+    name: msgbox-db-data
+  # msgbox-vendor:
+  #   name: msgbox-vendor
+  # msgbox-node-modules:
+  #   name: msgbox-node-modules
