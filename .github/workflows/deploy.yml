@@ -19,6 +19,7 @@ jobs:
             cd ~/addy-code
             git pull origin master
             cd ~/addy
+            docker compose exec -T addy php artisan migrate --force
             docker compose exec -T addy php artisan optimize:clear
             docker compose exec -T addy php artisan view:clear
             ~/addy/postfix-relay.sh
