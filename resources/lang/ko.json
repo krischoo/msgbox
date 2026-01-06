@@ -1,0 +1,12 @@
+{
+    "Username": "아이디",
+    "Password": "비밀번호",
+    "Forgot Username?": "아이디를 잊으셨나요?",
+    "Forgot Password?": "비밀번호를 잊으셨나요?",
+    "Remember Me": "로그인 유지",
+    "Login": "로그인",
+    "Register": "회원가입",
+    "Self-Hosted Instance Login": "로그인",
+    "Note: your username is not your email address.": "참고: 아이디는 이메일 주소가 아닙니다.",
+    "Don't have an account?": "계정이 없으신가요?"
+}

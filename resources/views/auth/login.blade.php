@@ -10,7 +10,7 @@
                     <div class="px-6 py-8 md:p-10">
 
                         <h1 class="text-center font-bold text-3xl">
-                            Self-Hosted Instance Login
+                            {{ __('Self-Hosted Instance Login') }}
                         </h1>
 
                         <div class="mx-auto mt-6 w-24 border-b-2 border-grey-200"></div>
@@ -35,7 +35,7 @@
 
                             <input id="username" type="text" class="appearance-none bg-grey-100 rounded w-full p-3 text-grey-700 focus:ring{{ $errors->has('username') ? ' border-red-500' : '' }}" name="username" value="{{ old('username') }}" placeholder="johndoe" required autofocus>
 
-                            <p class="text-xs mt-1 text-grey-600">Note: your username is <b>not</b> your email address.</p>
+                            <p class="text-xs mt-1 text-grey-600">{{ __('Note: your username is not your email address.') }}</p>
 
                             @if ($errors->has('username'))
                                 <p class="text-red-500 text-xs italic mt-4">
@@ -90,9 +90,9 @@
             </div>
             @if (Route::has('register'))
                 <p class="w-full text-xs text-center text-indigo-100 mt-6">
-                    Don't have an account?
+                    {{ __("Don't have an account?") }}
                     <a class="text-white hover:text-indigo-50 no-underline" href="{{ route('register') }}">
-                        Register
+                        {{ __('Register') }}
                     </a>
                 </p>
             @endif
