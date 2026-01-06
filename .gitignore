@@ -2,7 +2,7 @@
 /node_modules
 /public/hot
 /public/storage
-/public/build
+# /public/build  # 로컬 빌드 후 push하므로 주석 처리
 /public/css
 /public/js
 /public/mix-manifest.json

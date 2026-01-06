@@ -1,0 +1,39 @@
+{
+  "_webauthn-pnIkkuwh.js": {
+    "file": "assets/webauthn-pnIkkuwh.js",
+    "name": "webauthn"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-Dz97GylJ.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-3fU4sMDX.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-CG_-M7cS.css",
+      "assets/app-Dz97GylJ.css"
+    ]
+  },
+  "resources/js/webauthn/authenticate.js": {
+    "file": "assets/authenticate-C7kzqqCt.js",
+    "name": "authenticate",
+    "src": "resources/js/webauthn/authenticate.js",
+    "isEntry": true,
+    "imports": [
+      "_webauthn-pnIkkuwh.js"
+    ]
+  },
+  "resources/js/webauthn/register.js": {
+    "file": "assets/register-Bu-xbvxY.js",
+    "name": "register",
+    "src": "resources/js/webauthn/register.js",
+    "isEntry": true,
+    "imports": [
+      "_webauthn-pnIkkuwh.js"
+    ]
+  }
+}
