@@ -30,3 +30,6 @@ ssh-key-*.key
 sync-env.sh
 admin-tools.sh
 docs/
+CLAUDE.md
+.claude/
+.serena/
