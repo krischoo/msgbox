@@ -1,17 +1,17 @@
 <template>
   <div>
-    <Head title="Usernames" />
-    <h1 id="primary-heading" class="sr-only">Usernames</h1>
+    <Head :title="$t('usernames.title')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('usernames.title') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Usernames</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('usernames.title') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
-          A list of all the usernames {{ search ? 'found for your search' : 'in your account' }}
+          {{ search ? $t('usernames.descriptionSearch') : $t('usernames.descriptionAll') }}
           <button @click="moreInfoOpen = !moreInfoOpen">
-            <InformationCircleIcon
+            <Info
               class="h-6 w-6 inline-block cursor-pointer text-grey-500 dark:text-grey-200"
-              title="Click for more information"
+              :title="$t('usernames.moreInfo')"
             />
           </button>
         </p>
@@ -22,7 +22,7 @@
           @click="openAddUsernameModal"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 font-bold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:w-auto"
         >
-          Add Username
+          {{ $t('usernames.create') }}
         </button>
       </div>
     </div>
@@ -79,10 +79,10 @@
           <span
             v-if="isDefault(props.row.id)"
             class="ml-3 py-1 px-2 text-sm bg-yellow-200 text-yellow-900 rounded-full"
-            >default</span
+            >{{ $t('usernames.default') }}</span
           >
           <span v-else class="block text-grey-400 text-sm py-1 dark:text-grey-300">
-            <button @click="openMakeDefaultModal(props.row)">Make Default</button>
+            <button @click="openMakeDefaultModal(props.row)">{{ $t('usernames.makeDefault') }}</button>
           </span>
         </span>
         <span v-else-if="props.column.field == 'description'">
@@ -190,7 +190,7 @@
             as="button"
             type="button"
             class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium"
-            >Edit<span class="sr-only">, {{ props.row.username }}</span></Link
+            >{{ $t('common.edit') }}<span class="sr-only">, {{ props.row.username }}</span></Link
           >
           <button
             v-if="!isDefault(props.row.id)"
@@ -199,19 +199,19 @@
             type="button"
             class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium ml-4"
           >
-            Delete<span class="sr-only">, {{ props.row.username }}</span>
+            {{ $t('common.delete') }}<span class="sr-only">, {{ props.row.username }}</span>
           </button>
         </span>
       </template>
     </vue-good-table>
 
     <div v-else class="text-center">
-      <UsersIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <Users class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
-        No Usernames found for that search
+        {{ $t('usernames.noFound') }}
       </h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Try entering a different search term.
+        {{ $t('usernames.tryDifferentSearch') }}
       </p>
       <div class="mt-6">
         <Link
@@ -219,13 +219,13 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          View All Usernames
+          {{ $t('usernames.viewAll') }}
         </Link>
       </div>
     </div>
 
     <Modal :open="addUsernameModalOpen" @close="addUsernameModalOpen = false">
-      <template v-slot:title> Add new username </template>
+      <template v-slot:title> {{ $t('usernames.addNew') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Please choose usernames carefully as you can only add a
@@ -253,14 +253,14 @@
               class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
               :disabled="addUsernameLoading"
             >
-              Add Username
+              {{ $t('usernames.create') }}
               <loader v-if="addUsernameLoading" />
             </button>
             <button
               @click="addUsernameModalOpen = false"
               class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Cancel
+              {{ $t('common.cancel') }}
             </button>
           </div>
         </div>
@@ -268,7 +268,7 @@
     </Modal>
 
     <Modal :open="usernameDefaultRecipientModalOpen" @close="closeUsernameDefaultRecipientModal">
-      <template v-slot:title> Update Default Recipient </template>
+      <template v-slot:title> {{ $t('usernames.updateDefaultRecipient') }} </template>
       <template v-slot:content>
         <p class="my-4 text-grey-700 dark:text-grey-200">
           Select the default recipient for this username. This overrides the default recipient in
@@ -296,21 +296,21 @@
             class="px-4 py-3 text-cyan-900 font-semibold bg-cyan-400 hover:bg-cyan-300 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="editDefaultRecipientLoading"
           >
-            Update Default Recipient
+            {{ $t('usernames.updateDefaultRecipient') }}
             <Loader v-if="editDefaultRecipientLoading" />
           </button>
           <button
             @click="closeUsernameDefaultRecipientModal()"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="deleteUsernameModalOpen" @close="closeDeleteModal">
-      <template v-slot:title> Delete username </template>
+      <template v-slot:title> {{ $t('usernames.deleteUsername') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Are you sure you want to permanently delete this username? This will also
@@ -325,21 +325,21 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteUsernameLoading"
           >
-            Delete username
+            {{ $t('usernames.deleteUsername') }}
             <Loader v-if="deleteUsernameLoading" />
           </button>
           <button
             @click="closeDeleteModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="makeDefaultModalOpen" @close="closeMakeDefaultModal">
-      <template v-slot:title> Make default username</template>
+      <template v-slot:title> {{ $t('usernames.makeDefaultUsername') }}</template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           The default username for your account is used in the username reminder notification.
@@ -354,21 +354,21 @@
             class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="makeDefaultLoading"
           >
-            Make default username
+            {{ $t('usernames.makeDefaultUsername') }}
             <loader v-if="makeDefaultLoading" />
           </button>
           <button
             @click="closeMakeDefaultModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="moreInfoOpen" @close="moreInfoOpen = false">
-      <template v-slot:title> More information </template>
+      <template v-slot:title> {{ $t('usernames.moreInfo') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           When you add a username here you will be able to use it exactly like the username you
@@ -388,7 +388,7 @@
             @click="moreInfoOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Close
+            {{ $t('common.close') }}
           </button>
         </div>
       </template>
@@ -396,9 +396,12 @@
   </div>
 </template>
 
-<script setup>
-import { ref, toRefs } from 'vue'
+<script setup lang="ts">
+import { ref, toRefs, computed } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import Modal from '../../Components/Modal.vue'
 import Toggle from '../../Components/Toggle.vue'
 import { roundArrow } from 'tippy.js'
@@ -406,7 +409,7 @@ import tippy from 'tippy.js'
 import Multiselect from '@vueform/multiselect'
 import { VueGoodTable } from 'vue-good-table-next'
 import { notify } from '@kyvg/vue3-notification'
-import { InformationCircleIcon, UsersIcon } from '@heroicons/vue/24/outline'
+import { Info, Users } from 'lucide-vue-next'
 
 const props = defineProps({
   initialRows: {
@@ -447,41 +450,41 @@ const editDefaultRecipientLoading = ref(false)
 const tippyInstance = ref(null)
 const errors = ref({})
 
-const columns = [
+const columns = computed(() => [
   {
-    label: 'Created',
+    label: t('usernames.createdAt'),
     field: 'created_at',
     globalSearchDisabled: true,
   },
   {
-    label: 'Username',
+    label: t('usernames.username'),
     field: 'username',
   },
   {
-    label: 'Description',
+    label: t('usernames.descriptionCol'),
     field: 'description',
   },
   {
-    label: 'Default Recipient',
+    label: t('usernames.defaultRecipient'),
     field: 'default_recipient',
     sortable: false,
     globalSearchDisabled: true,
   },
   {
-    label: 'Alias Count',
+    label: t('usernames.aliasCount'),
     field: 'aliases_count',
     type: 'number',
     globalSearchDisabled: true,
   },
   {
-    label: 'Active',
+    label: t('usernames.active'),
     field: 'active',
     type: 'boolean',
     sortable: false,
     globalSearchDisabled: true,
   },
   {
-    label: 'Catch-All',
+    label: t('usernames.catchAll'),
     field: 'catch_all',
     type: 'boolean',
     sortable: false,
@@ -493,7 +496,7 @@ const columns = [
     sortable: false,
     globalSearchDisabled: true,
   },
-]
+])
 
 const addNewUsername = () => {
   addUsernameLoading.value = true

@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Head title="Edit Recipient" />
-    <h1 id="primary-heading" class="sr-only">Edit Recipient</h1>
+    <Head :title="$t('recipients.edit')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('recipients.edit') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Edit Recipient</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('recipients.edit') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
-          Make changes to your recipient email address
+          {{ $t('recipients.editDesc') }}
         </p>
       </div>
     </div>
@@ -29,13 +29,13 @@
               :data-tippy-content="$filters.formatDate(recipient.email_verified_at)"
               class="tooltip ml-2 py-1 px-2 bg-green-100 text-green-800 rounded-full text-xs font-semibold leading-5"
             >
-              verified
+              {{ $t('recipients.verified') }}
             </span>
             <span
               v-if="defaultRecipientId === recipient.id"
               class="ml-2 py-1 px-2 text-xs bg-yellow-200 text-yellow-900 rounded-full tooltip"
-              data-tippy-content="This is your account's default email address"
-              >default</span
+              :data-tippy-content="$t('recipients.defaultTooltip')"
+              >{{ $t('recipients.default') }}</span
             >
           </div>
         </div>
@@ -43,12 +43,10 @@
           <label
             for="can_reply_send"
             class="block font-medium text-grey-700 text-lg pointer-events-none cursor-default dark:text-grey-200"
-            >Can Reply/Send from Aliases</label
+            >{{ $t('recipients.canReplySendTitle') }}</label
           >
           <p class="mt-1 text-base text-grey-700 dark:text-grey-200">
-            Toggle this option to determine whether this recipient is allowed to reply and send from
-            your aliases. When set to off this recipient will not be able to reply or send from your
-            aliases and you will be notified when an attempt is made.
+            {{ $t('recipients.canReplySendDesc') }}
           </p>
           <Toggle
             id="can_reply_send"
@@ -63,15 +61,13 @@
           <label
             for="hide_email_subject"
             class="block font-medium text-grey-700 text-lg pointer-events-none cursor-default dark:text-grey-200"
-            >Hide Email Subject</label
+            >{{ $t('recipients.hideSubjectTitle') }}</label
           >
           <p class="mt-1 text-base text-grey-700 dark:text-grey-200">
             <span v-if="!recipient.fingerprint"
-              >You <b>must add a PGP key before you can use this setting</b>.</span
+              ><span v-html="$t('recipients.mustAddPGPKey')"></span> </span
             >
-            Enabling this option will hide and encrypt the email subject using protected headers.
-            Many mail clients are able to automatically decrypt and display the subject once the
-            email arrives.
+            {{ $t('recipients.hideSubjectDesc') }}
           </p>
           <Toggle
             v-if="recipient.fingerprint && !recipient.inline_encryption"
@@ -87,8 +83,8 @@
             class="mt-4 !cursor-not-allowed"
             :title="
               recipient.inline_encryption
-                ? 'You need to disable inline encryption before you can enable protected headers (hide subject)'
-                : 'You must enable encryption first by adding a PGP key'
+                ? t('recipients.disableInlineFirst')
+                : t('recipients.enableEncryptionFirst')
             "
             v-model="recipient.protected_headers"
             disabled="disabled"
@@ -99,16 +95,13 @@
           <label
             for="use_inline_encryption"
             class="block font-medium text-grey-700 text-lg pointer-events-none cursor-default dark:text-grey-200"
-            >Use PGP/Inline Encryption</label
+            >{{ $t('recipients.inlineEncryptionTitle') }}</label
           >
           <p class="mt-1 text-base text-grey-700 dark:text-grey-200">
             <span v-if="!recipient.fingerprint"
-              >You <b>must add a PGP key before you can use this setting</b>.</span
+              ><span v-html="$t('recipients.mustAddPGPKey')"></span> </span
             >
-            Enabling this option will use (PGP/Inline) instead of the default PGP/MIME encryption
-            for forwarded messages. Please Note: This will <b>ONLY</b> encrypt and forward the plain
-            text content. Do not enable this if you wish to receive attachments or message with HTML
-            content.
+            <span v-html="$t('recipients.inlineEncryptionDesc')"></span>
           </p>
           <Toggle
             v-if="recipient.fingerprint && !recipient.protected_headers"
@@ -124,8 +117,8 @@
             class="mt-4 !cursor-not-allowed"
             :title="
               recipient.protected_headers
-                ? 'You need to disable protected headers (hide subject) before you can enable inline encryption'
-                : 'You must enable encryption first by adding a PGP key'
+                ? t('recipients.disableProtectedFirst')
+                : t('recipients.enableEncryptionFirst')
             "
             v-model="recipient.inline_encryption"
             disabled="disabled"
@@ -136,7 +129,7 @@
           <span
             class="mt-2 text-sm text-grey-500 tooltip"
             :data-tippy-content="$filters.formatDate(recipient.updated_at)"
-            >Last updated {{ $filters.timeAgo(recipient.updated_at) }}.</span
+            >{{ $t('recipients.lastUpdated', { time: $filters.timeAgo(recipient.updated_at) }) }}</span
           >
         </div>
       </div>
@@ -144,13 +137,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Head, usePage } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import Toggle from '../../Components/Toggle.vue'
 import { notify } from '@kyvg/vue3-notification'
 import { roundArrow } from 'tippy.js'
 import tippy from 'tippy.js'
+
+const { t } = useI18n()
 
 const props = defineProps({
   initialRecipient: {

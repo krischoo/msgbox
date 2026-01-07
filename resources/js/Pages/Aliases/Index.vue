@@ -1,11 +1,11 @@
 <template>
   <div>
-    <Head title="Aliases" />
-    <h1 id="primary-heading" class="sr-only">Aliases</h1>
+    <Head :title="$t('aliases.title')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('aliases.title') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Aliases</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('aliases.title') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
           A list of all the aliases
           {{
@@ -14,7 +14,7 @@
               : 'in your account'
           }}
           <button @click="moreInfoOpen = !moreInfoOpen">
-            <InformationCircleIcon
+            <Info
               class="h-6 w-6 inline-block cursor-pointer text-grey-500 dark:text-grey-200"
               title="Click for more information"
             />
@@ -27,7 +27,7 @@
           @click="createAliasModalOpen = true"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 font-bold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:w-auto"
         >
-          Create Alias
+          {{ $t('aliases.create') }}
         </button>
       </div>
     </div>
@@ -42,62 +42,35 @@
       class="flex flex-col sm:flex-row justify-between items-center mb-4 bg-white rounded-lg shadow dark:bg-grey-900"
     >
       <div class="relative py-4 flex items-center space-x-1.5 px-4 text-sm sm:px-6">
-        <Listbox as="div" v-model="showAliasStatus">
-          <div class="relative">
-            <div>
-              <ListboxButton
-                class="inline-flex items-center text-sm text-grey-700 hover:text-grey-900 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-grey-200 dark:hover:text-grey-300"
-              >
-                <span class="sr-only">Change display</span>
-                <ListboxLabel class="cursor-pointer">Display</ListboxLabel>
-                <p class="ml-1 font-medium">{{ showAliasStatus.label }}</p>
-                <ChevronDownIcon
-                  class="h-5 w-5 text-grey-700 dark:text-grey-200"
-                  aria-hidden="true"
-                />
-              </ListboxButton>
-            </div>
-
-            <transition
-              leave-active-class="transition ease-in duration-100"
-              leave-from-class="opacity-100"
-              leave-to-class="opacity-0"
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <button
+              class="inline-flex items-center text-sm text-grey-700 hover:text-grey-900 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-grey-200 dark:hover:text-grey-300"
             >
-              <ListboxOptions
-                class="absolute z-20 mt-2 w-48 origin-top-left overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-grey-900"
-              >
-                <ListboxOption
-                  as="template"
-                  v-for="option in displayOptions"
-                  :key="option.value"
-                  :value="option"
-                  v-slot="{ active, selected }"
-                >
-                  <li
-                    :class="[
-                      active ? 'text-white bg-indigo-500' : 'text-grey-900 dark:text-grey-100',
-                      'cursor-pointer select-none p-2 text-sm',
-                    ]"
-                  >
-                    <div class="flex flex-col">
-                      <div class="flex justify-between">
-                        <p :class="selected ? 'font-semibold' : 'font-normal'">
-                          {{ option.label }}
-                        </p>
-                        <span
-                          v-if="selected"
-                          :class="active ? 'text-white' : 'text-indigo-500 dark:text-grey-100'"
-                        >
-                          <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                        </span>
-                      </div>
-                    </div>
-                  </li>
-                </ListboxOption>
-              </ListboxOptions>
-            </transition>
-          </div>
-        </Listbox>
+              <span class="sr-only">{{ $t('filters.display') }}</span>
+              <span class="cursor-pointer">{{ $t('filters.display') }}</span>
+              <p class="ml-1 font-medium">{{ showAliasStatus.label }}</p>
+              <ChevronDown class="h-5 w-5 text-grey-700 dark:text-grey-200" aria-hidden="true" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" class="w-48">
+            <DropdownMenuItem
+              v-for="option in displayOptions"
+              :key="option.value"
+              @click="showAliasStatus = option"
+              class="flex justify-between items-center cursor-pointer"
+            >
+              <span :class="showAliasStatus.value === option.value ? 'font-semibold' : ''">
+                {{ option.label }}
+              </span>
+              <Check
+                v-if="showAliasStatus.value === option.value"
+                class="h-4 w-4 text-indigo-500"
+                aria-hidden="true"
+              />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <span
           v-if="['all', 'active_inactive', 'active'].includes(showAliasStatus.value)"
           class="bg-green-100 tooltip outline-none h-4 w-4 rounded-full flex items-center justify-center"
@@ -122,62 +95,35 @@
       </div>
       <div class="flex py-4 px-4 sm:px-6 lg:px-8">
         <div class="flex items-center">
-          <Listbox as="div" v-model="currentSort">
-            <div class="relative">
-              <div>
-                <ListboxButton
-                  class="inline-flex items-center text-sm text-grey-700 hover:text-grey-900 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-grey-200 dark:hover:text-grey-300"
-                >
-                  <span class="sr-only">Change sort by</span>
-                  <ListboxLabel class="cursor-pointer">Sort By</ListboxLabel>
-                  <p class="ml-1 font-medium">{{ currentSort.label }}</p>
-                  <ChevronDownIcon
-                    class="h-5 w-5 text-grey-700 dark:text-grey-200"
-                    aria-hidden="true"
-                  />
-                </ListboxButton>
-              </div>
-
-              <transition
-                leave-active-class="transition ease-in duration-100"
-                leave-from-class="opacity-100"
-                leave-to-class="opacity-0"
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <button
+                class="inline-flex items-center text-sm text-grey-700 hover:text-grey-900 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-grey-200 dark:hover:text-grey-300"
               >
-                <ListboxOptions
-                  class="absolute right-0 z-20 mt-2 w-48 origin-top-right overflow-hidden rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-grey-900"
-                >
-                  <ListboxOption
-                    as="template"
-                    v-for="option in sortOptions"
-                    :key="option.value"
-                    :value="option"
-                    v-slot="{ active, selected }"
-                  >
-                    <li
-                      :class="[
-                        active ? 'text-white bg-indigo-500' : 'text-grey-900 dark:text-grey-100',
-                        'cursor-pointer select-none p-2 text-sm',
-                      ]"
-                    >
-                      <div class="flex flex-col">
-                        <div class="flex justify-between">
-                          <p :class="selected ? 'font-semibold' : 'font-normal'">
-                            {{ option.label }}
-                          </p>
-                          <span
-                            v-if="selected"
-                            :class="active ? 'text-white' : 'text-indigo-500 dark:text-grey-100'"
-                          >
-                            <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        </div>
-                      </div>
-                    </li>
-                  </ListboxOption>
-                </ListboxOptions>
-              </transition>
-            </div>
-          </Listbox>
+                <span class="sr-only">{{ $t('filters.sortBy') }}</span>
+                <span class="cursor-pointer">{{ $t('filters.sortBy') }}</span>
+                <p class="ml-1 font-medium">{{ currentSort.label }}</p>
+                <ChevronDown class="h-5 w-5 text-grey-700 dark:text-grey-200" aria-hidden="true" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" class="w-48">
+              <DropdownMenuItem
+                v-for="option in sortOptions"
+                :key="option.value"
+                @click="currentSort = option"
+                class="flex justify-between items-center cursor-pointer"
+              >
+                <span :class="currentSort.value === option.value ? 'font-semibold' : ''">
+                  {{ option.label }}
+                </span>
+                <Check
+                  v-if="currentSort.value === option.value"
+                  class="h-4 w-4 text-indigo-500"
+                  aria-hidden="true"
+                />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <button
             class="ml-3 disabled:cursor-not-allowed tooltip"
@@ -187,8 +133,8 @@
               $page.props.sortDirection === 'desc' ? 'Change to ascending' : 'Change to descending'
             "
           >
-            <BarsArrowDownIcon v-if="$page.props.sortDirection === 'desc'" class="h-5 w-5" />
-            <BarsArrowUpIcon type="button" v-else class="h-5 w-5" />
+            <ArrowDownNarrowWide v-if="$page.props.sortDirection === 'desc'" class="h-5 w-5" />
+            <ArrowUpNarrowWide type="button" v-else class="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -536,7 +482,7 @@
                 data-tippy-content="Send an email from this alias"
               >
                 Send
-                <EnvelopeIcon class="ml-1 h-4 w-4" aria-hidden="true" />
+                <Mail class="ml-1 h-4 w-4" aria-hidden="true" />
               </button>
             </span>
           </template>
@@ -643,14 +589,14 @@
                 class="relative inline-flex items-center rounded-l-md border border-grey-300 bg-white px-2 py-2 text-sm font-medium text-grey-500 hover:bg-grey-50 focus:z-20 dark:bg-grey-900 dark:hover:bg-grey-950 dark:border-grey-500"
               >
                 <span class="sr-only">Previous</span>
-                <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
+                <ChevronLeft class="h-5 w-5" aria-hidden="true" />
               </Link>
               <span
                 v-else
                 class="disabled cursor-not-allowed relative inline-flex items-center rounded-l-md border border-grey-300 bg-white px-2 py-2 text-sm font-medium text-grey-500 hover:bg-grey-50 focus:z-20 dark:bg-grey-800 dark:border-grey-500"
               >
                 <span class="sr-only">Previous</span>
-                <ChevronLeftIcon class="h-5 w-5" aria-hidden="true" />
+                <ChevronLeft class="h-5 w-5" aria-hidden="true" />
               </span>
 
               <div v-for="link in links" v-bind:key="link.label">
@@ -679,14 +625,14 @@
                 class="relative inline-flex items-center rounded-r-md border border-grey-300 bg-white px-2 py-2 text-sm font-medium text-grey-500 hover:bg-grey-50 focus:z-20 dark:bg-grey-900 dark:hover:bg-grey-950 dark:border-grey-500"
               >
                 <span class="sr-only">Next</span>
-                <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
+                <ChevronRight class="h-5 w-5" aria-hidden="true" />
               </Link>
               <span
                 v-else
                 class="disabled cursor-not-allowed relative inline-flex items-center rounded-r-md border border-grey-300 bg-white px-2 py-2 text-sm font-medium text-grey-500 hover:bg-grey-50 focus:z-20 dark:bg-grey-800 dark:text-grey-200 dark:border-grey-500"
               >
                 <span class="sr-only">Next</span>
-                <ChevronRightIcon class="h-5 w-5" aria-hidden="true" />
+                <ChevronRight class="h-5 w-5" aria-hidden="true" />
               </span>
             </nav>
           </div>
@@ -698,7 +644,7 @@
       v-else-if="Object.keys(route().params).length || currentAliasStatus !== 'active_inactive'"
       class="text-center"
     >
-      <AtSymbolIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <AtSign class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
         No Aliases found for that search or with those filters
       </h3>
@@ -717,7 +663,7 @@
     </div>
 
     <div v-else class="text-center text-grey-700 dark:text-grey-200">
-      <AtSymbolIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <AtSign class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
         It doesn't look like you have any aliases yet!
       </h3>
@@ -773,7 +719,7 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+          <Plus class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
           Create Your First Alias
         </button>
       </div>
@@ -1380,9 +1326,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue'
 import { router, Head, Link } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import Modal from '../../Components/Modal.vue'
 import Toggle from '../../Components/Toggle.vue'
 import { roundArrow } from 'tippy.js'
@@ -1391,26 +1340,23 @@ import { VueGoodTable } from 'vue-good-table-next'
 import Multiselect from '@vueform/multiselect'
 import { notify } from '@kyvg/vue3-notification'
 import {
-  Listbox,
-  ListboxButton,
-  ListboxLabel,
-  ListboxOption,
-  ListboxOptions,
-} from '@headlessui/vue'
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
-  InformationCircleIcon,
-  AtSymbolIcon,
-  BarsArrowDownIcon,
-  BarsArrowUpIcon,
-  EnvelopeIcon,
-} from '@heroicons/vue/24/outline'
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
-  CheckIcon,
-  PlusIcon,
-} from '@heroicons/vue/20/solid'
+  Info,
+  AtSign,
+  ArrowDownNarrowWide,
+  ArrowUpNarrowWide,
+  Mail,
+  ChevronLeft,
+  ChevronRight,
+  ChevronDown,
+  Check,
+  Plus,
+} from 'lucide-vue-next'
 
 const props = defineProps({
   initialRows: {
@@ -1534,10 +1480,10 @@ const updatePageSizeLoading = ref(false)
 
 const pageSizeOptions = [25, 50, 100]
 
-const displayOptions = [
+const displayOptions = computed(() => [
   {
     value: 'all',
-    label: 'All',
+    label: t('common.all'),
     params: {
       deleted: 'with',
     },
@@ -1545,7 +1491,7 @@ const displayOptions = [
   },
   {
     value: 'active_inactive',
-    label: 'Active and Inactive',
+    label: t('filters.activeInactive'),
     params: {
       active: 'both',
     },
@@ -1553,7 +1499,7 @@ const displayOptions = [
   },
   {
     value: 'active',
-    label: 'Active only',
+    label: t('filters.activeOnly'),
     params: {
       active: 'true',
     },
@@ -1561,7 +1507,7 @@ const displayOptions = [
   },
   {
     value: 'inactive',
-    label: 'Inactive only',
+    label: t('filters.inactiveOnly'),
     params: {
       active: 'false',
     },
@@ -1569,84 +1515,84 @@ const displayOptions = [
   },
   {
     value: 'deleted',
-    label: 'Deleted only',
+    label: t('filters.deletedOnly'),
     params: {
       deleted: 'only',
     },
     omit: ['page', 'active'],
   },
-]
+])
 
-const showAliasStatus = ref(_.find(displayOptions, ['value', props.currentAliasStatus]))
+const showAliasStatus = ref(_.find(displayOptions.value, ['value', props.currentAliasStatus]))
 
-const sortOptions = [
+const sortOptions = computed(() => [
   {
     value: 'active',
-    label: 'Active',
+    label: t('common.active'),
   },
   {
     value: 'email',
-    label: 'Alias',
+    label: t('nav.aliases'),
   },
   {
     value: 'created_at',
-    label: 'Created At',
+    label: t('aliases.createdAt'),
   },
   {
     value: 'deleted_at',
-    label: 'Deleted At',
+    label: t('aliases.deletedAt'),
   },
   {
     value: 'domain',
-    label: 'Domain',
+    label: t('aliases.domain'),
   },
   {
     value: 'emails_blocked',
-    label: 'Emails Blocked',
+    label: t('dashboard.emails.blocked'),
   },
   {
     value: 'emails_forwarded',
-    label: 'Emails Forwarded',
+    label: t('dashboard.emails.forwarded'),
   },
   {
     value: 'emails_replied',
-    label: 'Emails Replied',
+    label: t('dashboard.emails.replies'),
   },
   {
     value: 'emails_sent',
-    label: 'Emails Sent',
+    label: t('dashboard.emails.sent'),
   },
   {
     value: 'last_blocked',
-    label: 'Last Blocked At',
+    label: t('aliases.lastBlocked'),
   },
   {
     value: 'last_forwarded',
-    label: 'Last Forwarded At',
+    label: t('aliases.lastForwarded'),
   },
   {
     value: 'last_replied',
-    label: 'Last Replied At',
+    label: t('aliases.lastReplied'),
   },
   {
     value: 'last_sent',
-    label: 'Last Sent At',
+    label: t('aliases.lastSent'),
   },
   {
     value: 'last_used',
-    label: 'Last Used At',
+    label: t('aliases.lastUsed'),
   },
   {
     value: 'updated_at',
-    label: 'Updated At',
+    label: t('aliases.updatedAt'),
   },
-]
-const currentSort = ref(_.find(sortOptions, ['value', props.sort]))
+])
+const currentSort = ref(_.find(sortOptions.value, ['value', props.sort]))
 
-const aliasFormatOptions = [
+const aliasFormatOptions = computed(() => [
   {
     value: 'random_characters',
-    label: 'Random Characters',
+    label: t('aliases.formatRandomChars'),
   },
   {
     value: 'uuid',
@@ -1654,13 +1600,13 @@ const aliasFormatOptions = [
   },
   {
     value: 'random_words',
-    label: 'Random Words',
+    label: t('aliases.formatRandomWords'),
   },
   {
     value: 'custom',
-    label: 'Custom',
+    label: t('aliases.customAlias'),
   },
-]
+])
 const columns = [
   {
     label: '',

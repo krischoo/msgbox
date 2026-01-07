@@ -1,18 +1,17 @@
 <template>
   <div>
-    <Head title="Failed Deliveries" />
-    <h1 id="primary-heading" class="sr-only">Failed Deliveries</h1>
+    <Head :title="$t('failedDeliveries.title')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('failedDeliveries.title') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Failed Deliveries</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('failedDeliveries.title') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
-          A list of all the failed deliveries
-          {{ search ? 'found for your search' : 'in your account' }}
+          {{ search ? $t('failedDeliveries.descriptionSearch') : $t('failedDeliveries.descriptionAll') }}
           <button @click="moreInfoOpen = !moreInfoOpen">
-            <InformationCircleIcon
+            <Info
               class="h-6 w-6 inline-block cursor-pointer text-grey-500 dark:text-grey-200"
-              title="Click for more information"
+              :title="$t('failedDeliveries.moreInfo')"
             />
           </button>
         </p>
@@ -110,7 +109,7 @@
             :href="'api/v1/failed-deliveries/' + props.row.id + '/download'"
             class="mr-4 text-indigo-500 hover:text-indigo-800 font-medium dark:text-indigo-400 dark:hover:text-indigo-500"
           >
-            Download
+            {{ $t('failedDeliveries.download') }}
           </a>
           <button
             v-if="
@@ -124,7 +123,7 @@
             type="button"
             class="mr-4 text-indigo-500 hover:text-indigo-800 font-medium dark:text-indigo-400 dark:hover:text-indigo-500"
           >
-            Resend
+            {{ $t('failedDeliveries.resend') }}
           </button>
           <button
             @click="openDeleteModal(props.row.id)"
@@ -132,19 +131,19 @@
             type="button"
             class="text-indigo-500 hover:text-indigo-800 font-medium dark:text-indigo-400 dark:hover:text-indigo-500"
           >
-            Delete
+            {{ $t('common.delete') }}
           </button>
         </span>
       </template>
     </vue-good-table>
 
     <div v-else-if="search" class="text-center">
-      <ExclamationTriangleIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <AlertTriangle class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
-        No Failed Deliveries found for that search
+        {{ $t('failedDeliveries.noFound') }}
       </h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Try entering a different search term.
+        {{ $t('failedDeliveries.tryDifferentSearch') }}
       </p>
       <div class="mt-6">
         <Link
@@ -152,30 +151,28 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          View All Failed Deliveries
+          {{ $t('failedDeliveries.viewAll') }}
         </Link>
       </div>
     </div>
 
     <div v-else class="text-center">
-      <ExclamationTriangleIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
-      <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">No Failed Deliveries</h3>
+      <AlertTriangle class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">{{ $t('failedDeliveries.noFailures') }}</h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        You don't have any failed delivery attempts to display.
+        {{ $t('failedDeliveries.noFailuresDesc') }}
       </p>
     </div>
 
     <Modal :open="resendFailedDeliveryModalOpen" @close="closeResendModal">
-      <template v-slot:title> Resend Failed Delivery </template>
+      <template v-slot:title>{{ $t('failedDeliveries.resendTitle') }}</template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
-          You can choose to resend to the original recipient or select a different one below. You
-          can choose multiple recipients.
+          {{ $t('failedDeliveries.resendDesc1') }}
         </p>
         <p class="my-4 text-grey-700 dark:text-grey-200">
-          Leave the select input empty if you would like to resend to the original recipient
-          <b v-if="failedDeliveryToResend.recipient">{{ failedDeliveryToResend.recipient.email }}</b
-          >.
+          {{ $t('failedDeliveries.resendDesc2') }}
+          <b v-if="failedDeliveryToResend.recipient">{{ failedDeliveryToResend.recipient.email }}</b>
         </p>
         <multiselect
           v-model="failedDeliveryRecipientsToResend"
@@ -187,7 +184,7 @@
           :searchable="true"
           :max="10"
           class="p-0"
-          placeholder="Select recipient(s)"
+          :placeholder="$t('failedDeliveries.selectRecipients')"
           label="email"
           track-by="email"
         >
@@ -199,29 +196,27 @@
             class="px-4 py-3 text-cyan-900 font-semibold bg-cyan-400 hover:bg-cyan-300 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="resendFailedDeliveryLoading"
           >
-            Resend failed delivery
+            {{ $t('failedDeliveries.resendDelivery') }}
             <loader v-if="resendFailedDeliveryLoading" />
           </button>
           <button
             @click="closeResendModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="deleteFailedDeliveryModalOpen" @close="closeDeleteModal">
-      <template v-slot:title> Delete Failed Delivery </template>
+      <template v-slot:title>{{ $t('failedDeliveries.deleteTitle') }}</template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
-          Are you sure you want to delete this failed delivery?
+          {{ $t('failedDeliveries.deleteConfirm') }}
         </p>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
-          Failed deliveries are <b>automatically removed</b> when they are more than
-          <b>7 days old</b>. Deleting a failed delivery also deletes the email if it has been
-          stored.
+          {{ $t('failedDeliveries.deleteDesc') }}
         </p>
         <div class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           <button
@@ -230,34 +225,30 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteFailedDeliveryLoading"
           >
-            Delete failed delivery
+            {{ $t('failedDeliveries.deleteDelivery') }}
             <loader v-if="deleteFailedDeliveryLoading" />
           </button>
           <button
             @click="closeDeleteModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="moreInfoOpen" @close="moreInfoOpen = false">
-      <template v-slot:title> More information </template>
+      <template v-slot:title>{{ $t('failedDeliveries.moreInfo') }}</template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
-          Sometimes when addy.io attempts to send an email, the delivery is not successful. This is
-          often referred to as a "bounced email".
+          {{ $t('failedDeliveries.moreInfoDesc1') }}
         </p>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
-          This page allows you to see any failed deliveries relating to your account and the reason
-          why they failed.
+          {{ $t('failedDeliveries.moreInfoDesc2') }}
         </p>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
-          Only failed delivery attempts from the addy.io servers to your recipients (or reply/send
-          attempts from your aliases) will be shown here. It will not show messages that failed to
-          reach the addy.io server from some other sender.
+          {{ $t('failedDeliveries.moreInfoDesc3') }}
         </p>
 
         <div class="mt-6 flex flex-col sm:flex-row">
@@ -265,7 +256,7 @@
             @click="moreInfoOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Close
+            {{ $t('common.close') }}
           </button>
         </div>
       </template>
@@ -273,16 +264,19 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, computed } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import Modal from '../Components/Modal.vue'
+
+const { t } = useI18n()
 import { roundArrow } from 'tippy.js'
 import tippy from 'tippy.js'
 import { notify } from '@kyvg/vue3-notification'
 import { VueGoodTable } from 'vue-good-table-next'
 import Multiselect from '@vueform/multiselect'
-import { InformationCircleIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
+import { Info, AlertTriangle } from 'lucide-vue-next'
 
 const props = defineProps({
   initialRows: {
@@ -311,41 +305,41 @@ const failedDeliveryIdToDelete = ref(null)
 const tippyInstance = ref(null)
 const errors = ref({})
 
-const columns = [
+const columns = computed(() => [
   {
-    label: 'Created',
+    label: t('failedDeliveries.createdAt'),
     field: 'created_at',
     globalSearchDisabled: true,
   },
   {
-    label: 'Email Type',
+    label: t('failedDeliveries.emailType'),
     field: 'email_type',
   },
   {
-    label: 'Destination',
+    label: t('failedDeliveries.destination'),
     field: 'recipient',
     globalSearchDisabled: true,
   },
   {
-    label: 'Alias',
+    label: t('failedDeliveries.alias'),
     field: 'alias',
     globalSearchDisabled: true,
   },
   {
-    label: 'Sender',
+    label: t('failedDeliveries.sender'),
     field: 'sender',
   },
   {
-    label: 'Mail Server',
+    label: t('failedDeliveries.mailServer'),
     field: 'remote_mta',
   },
   {
-    label: 'Code',
+    label: t('failedDeliveries.code'),
     field: 'code',
     sortable: false,
   },
   {
-    label: 'First Attempted',
+    label: t('failedDeliveries.firstAttempted'),
     field: 'attempted_at',
     globalSearchDisabled: true,
   },
@@ -355,7 +349,7 @@ const columns = [
     sortable: false,
     globalSearchDisabled: true,
   },
-]
+])
 
 const resendFailedDelivery = id => {
   resendFailedDeliveryLoading.value = true

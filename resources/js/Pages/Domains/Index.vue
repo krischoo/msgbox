@@ -1,15 +1,15 @@
 <template>
   <div>
-    <Head title="Domains" />
-    <h1 id="primary-heading" class="sr-only">Domains</h1>
+    <Head :title="$t('domains.title')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('domains.title') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Domains</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('domains.title') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
-          A list of all the domains {{ search ? 'found for your search' : 'in your account' }}
+          {{ search ? $t('domains.descriptionSearch') : $t('domains.descriptionAll') }}
           <button @click="moreInfoOpen = !moreInfoOpen">
-            <InformationCircleIcon
+            <Info
               class="h-6 w-6 inline-block cursor-pointer text-grey-500 dark:text-grey-200"
               title="Click for more information"
             />
@@ -22,7 +22,7 @@
           @click="openAddDomainModal"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 font-bold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:w-auto"
         >
-          Add Domain
+          {{ $t('domains.create') }}
         </button>
       </div>
     </div>
@@ -250,7 +250,7 @@
               @click="openCheckRecordsModal(rows[props.row.originalIndex])"
               class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 text-sm ml-2 text-grey-500 dark:text-grey-300 rounded-sm"
             >
-              Recheck
+              {{ $t('domains.recheck') }}
             </button>
           </div>
           <button
@@ -258,7 +258,7 @@
             @click="openCheckRecordsModal(rows[props.row.originalIndex])"
             class="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 text-sm text-grey-500 dark:text-grey-300 rounded-sm"
           >
-            Check Records
+            {{ $t('domains.checkRecords') }}
           </button>
         </span>
         <span v-else class="flex items-center justify-center outline-none" tabindex="-1">
@@ -267,7 +267,7 @@
             as="button"
             type="button"
             class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium"
-            >Edit<span class="sr-only">, {{ props.row.domain }}</span></Link
+            >{{ $t('common.edit') }}<span class="sr-only">, {{ props.row.domain }}</span></Link
           >
           <button
             @click="openDeleteModal(props.row.id)"
@@ -275,19 +275,19 @@
             type="button"
             class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium ml-4"
           >
-            Delete<span class="sr-only">, {{ props.row.domain }}</span>
+            {{ $t('common.delete') }}<span class="sr-only">, {{ props.row.domain }}</span>
           </button>
         </span>
       </template>
     </vue-good-table>
 
     <div v-else-if="search" class="text-center">
-      <GlobeAltIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <Globe class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
-        No Domains found for that search
+        {{ $t('domains.noFound') }}
       </h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Try entering a different search term.
+        {{ $t('domains.tryDifferentSearch') }}
       </p>
       <div class="mt-6">
         <Link
@@ -295,16 +295,16 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          View All Domains
+          {{ $t('domains.viewAll') }}
         </Link>
       </div>
     </div>
 
     <div v-else class="text-center">
-      <GlobeAltIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
-      <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">No Domains</h3>
+      <Globe class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">{{ $t('domains.noDomains') }}</h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Get started by creating a new domain.
+        {{ $t('domains.getStarted') }}
       </p>
       <div class="mt-6">
         <button
@@ -312,15 +312,15 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-          Add a Domain
+          <Plus class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+          {{ $t('domains.create') }}
         </button>
       </div>
     </div>
 
     <Modal :open="addDomainModalOpen" @close="closeCheckRecordsModal" max-width="md:max-w-2xl">
-      <template v-if="!domainToCheck" v-slot:title> Add new domain </template>
-      <template v-else v-slot:title> Check DNS records </template>
+      <template v-if="!domainToCheck" v-slot:title> {{ $t('domains.addNew') }} </template>
+      <template v-else v-slot:title> {{ $t('domains.checkDNSRecords') }} </template>
       <template v-if="!domainToCheck" v-slot:content>
         <p class="mt-4 mb-2 text-grey-700 dark:text-grey-200">
           To verify ownership of the domain, please add the following TXT record and then click Add
@@ -364,14 +364,14 @@
             :class="addDomainLoading ? 'cursor-not-allowed' : ''"
             :disabled="addDomainLoading"
           >
-            Add Domain
+            {{ $t('domains.create') }}
             <loader v-if="addDomainLoading" />
           </button>
           <button
             @click="addDomainModalOpen = false"
             class="ml-4 px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
         <div class="mt-2 text-sm dark:text-grey-200">
@@ -488,14 +488,14 @@
             :class="checkRecordsLoading ? 'cursor-not-allowed' : ''"
             :disabled="checkRecordsLoading"
           >
-            Check Records
+            {{ $t('domains.checkRecords') }}
             <loader v-if="checkRecordsLoading" />
           </button>
           <button
             @click="closeCheckRecordsModal"
             class="ml-4 px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
         <div class="mt-2 text-sm dark:text-grey-200">
@@ -512,7 +512,7 @@
     </Modal>
 
     <Modal :open="domainDefaultRecipientModalOpen" @close="closeDomainDefaultRecipientModal">
-      <template v-slot:title> Update Default Recipient </template>
+      <template v-slot:title> {{ $t('domains.updateDefaultRecipient') }} </template>
       <template v-slot:content>
         <p class="my-4 text-grey-700 dark:text-grey-200">
           Select the default recipient for this domain. This overrides the default recipient in your
@@ -542,21 +542,21 @@
             class="px-4 py-3 text-cyan-900 font-semibold bg-cyan-400 hover:bg-cyan-300 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="editDefaultRecipientLoading"
           >
-            Update Default Recipient
+            {{ $t('domains.updateDefaultRecipient') }}
             <loader v-if="editDefaultRecipientLoading" />
           </button>
           <button
             @click="closeDomainDefaultRecipientModal()"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="deleteDomainModalOpen" @close="closeDeleteModal">
-      <template v-slot:title> Delete domain </template>
+      <template v-slot:title> {{ $t('domains.deleteDomain') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Are you sure you want to delete this domain? This will also
@@ -570,21 +570,21 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteDomainLoading"
           >
-            Delete domain
+            {{ $t('domains.deleteDomain') }}
             <loader v-if="deleteDomainLoading" />
           </button>
           <button
             @click="closeDeleteModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="moreInfoOpen" @close="moreInfoOpen = false">
-      <template v-slot:title> More information </template>
+      <template v-slot:title> {{ $t('domains.moreInfo') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Adding a custom domain such as <b>example.com</b> will allow you to create unlimited
@@ -619,7 +619,7 @@
             @click="moreInfoOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Close
+            {{ $t('common.close') }}
           </button>
         </div>
       </template>
@@ -627,9 +627,12 @@
   </div>
 </template>
 
-<script setup>
-import { ref, toRefs } from 'vue'
+<script setup lang="ts">
+import { ref, toRefs, computed } from 'vue'
 import { Head, Link, router } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import Modal from '../../Components/Modal.vue'
 import Toggle from '../../Components/Toggle.vue'
 import { roundArrow } from 'tippy.js'
@@ -637,8 +640,7 @@ import tippy from 'tippy.js'
 import Multiselect from '@vueform/multiselect'
 import { VueGoodTable } from 'vue-good-table-next'
 import { notify } from '@kyvg/vue3-notification'
-import { InformationCircleIcon, GlobeAltIcon } from '@heroicons/vue/24/outline'
-import { PlusIcon } from '@heroicons/vue/20/solid'
+import { Info, Globe, Plus } from 'lucide-vue-next'
 
 const props = defineProps({
   initialRows: {
@@ -693,48 +695,48 @@ const editDefaultRecipientLoading = ref(false)
 const tippyInstance = ref(null)
 const errors = ref({})
 
-const columns = [
+const columns = computed(() => [
   {
-    label: 'Created',
+    label: t('domains.createdAt'),
     field: 'created_at',
     globalSearchDisabled: true,
   },
   {
-    label: 'Domain',
+    label: t('domains.domain'),
     field: 'domain',
   },
   {
-    label: 'Description',
+    label: t('domains.descriptionCol'),
     field: 'description',
   },
   {
-    label: 'Default Recipient',
+    label: t('domains.defaultRecipient'),
     field: 'default_recipient',
     sortable: false,
     globalSearchDisabled: true,
   },
   {
-    label: 'Alias Count',
+    label: t('domains.aliasCount'),
     field: 'aliases_count',
     type: 'number',
     globalSearchDisabled: true,
   },
   {
-    label: 'Active',
+    label: t('domains.active'),
     field: 'active',
     type: 'boolean',
     sortable: false,
     globalSearchDisabled: true,
   },
   {
-    label: 'Catch-All',
+    label: t('domains.catchAll'),
     field: 'catch_all',
     type: 'boolean',
     sortable: false,
     globalSearchDisabled: true,
   },
   {
-    label: 'Verified Records',
+    label: t('domains.verifiedRecords'),
     field: 'domain_sending_verified_at',
     globalSearchDisabled: true,
   },
@@ -744,7 +746,7 @@ const columns = [
     sortable: false,
     globalSearchDisabled: true,
   },
-]
+])
 
 const addNewDomain = () => {
   addDomainLoading.value = true

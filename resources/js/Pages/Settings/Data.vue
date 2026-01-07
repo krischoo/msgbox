@@ -5,34 +5,25 @@
         <div>
           <div class="mb-6 text-base text-grey-700 dark:text-grey-200">
             <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-              Import Aliases
+              {{ $t('settings.data.importAliases') }}
             </h3>
 
             <div class="mt-4 w-24 border-b-2 border-grey-200"></div>
 
-            <p class="mt-6">
-              You can import aliases for <b>your custom domains</b> by uploading a CSV file. Please
-              note this is <b>only available for custom domains</b>.
-            </p>
+            <p class="mt-6" v-html="$t('settings.data.importDesc1')"></p>
 
-            <p class="mt-4">Aliases that <b>already exist</b> will not be imported.</p>
+            <p class="mt-4" v-html="$t('settings.data.importDesc2')"></p>
+            <p class="mt-4" v-html="$t('settings.data.importDesc3')"></p>
             <p class="mt-4">
-              The import is <b>limited to 1,000 rows (aliases)</b>. Please ensure you use multiple
-              CSV files if you need to import more than this.
+              {{ $t('settings.data.importDesc4') }}
             </p>
-            <p class="mt-4">
-              Please use the template file provided below. Only CSV files are supported.
-            </p>
-            <p class="mt-4">
-              The import will take a few minutes. You will <b>receive an email</b> once it is
-              complete.
-            </p>
+            <p class="mt-4" v-html="$t('settings.data.importDesc5')"></p>
             <p class="mt-4">
               <a
                 href="/import-aliases-template.csv"
                 rel="nofollow noopener noreferrer"
                 class="text-indigo-700 cursor-pointer dark:text-indigo-400"
-                >Click here to download the CSV import template</a
+                >{{ $t('settings.data.downloadTemplate') }}</a
               >
             </p>
           </div>
@@ -63,14 +54,14 @@
                   v-if="!domainsCount"
                   class="bg-cyan-400 block w-full text-center hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-not-allowed"
                 >
-                  You don't have any custom domains
+                  {{ $t('settings.data.noCustomDomains') }}
                 </div>
                 <button
                   v-else
                   type="submit"
                   class="bg-cyan-400 block w-full text-center hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
-                  Import Alias Data
+                  {{ $t('settings.data.importAliasData') }}
                 </button>
               </div>
             </div>
@@ -78,17 +69,15 @@
 
           <div class="my-6">
             <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-              Export Aliases
+              {{ $t('settings.data.exportAliases') }}
             </h3>
 
             <div class="mt-4 w-24 border-b-2 border-grey-200"></div>
 
-            <p v-if="totalAliasesCount" class="mt-6 text-base text-grey-700 dark:text-grey-200">
-              You can click the button below to export all the data for your
-              <b>{{ totalAliasesCount }}</b> aliases as a .csv file.
+            <p v-if="totalAliasesCount" class="mt-6 text-base text-grey-700 dark:text-grey-200" v-html="$t('settings.data.exportDesc', { count: totalAliasesCount })">
             </p>
             <p v-else class="mt-6 text-base text-grey-700 dark:text-grey-200">
-              You don't have any aliases to export.
+              {{ $t('settings.data.noAliasesToExport') }}
             </p>
           </div>
 
@@ -106,13 +95,13 @@
             :disabled="!totalAliasesCount"
             class="bg-cyan-400 block w-full text-center hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Export Alias Data
+            {{ $t('settings.data.exportAliasData') }}
           </a>
           <div
             v-else
             class="bg-cyan-400 block w-full text-center hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-not-allowed"
           >
-            Export Alias Data
+            {{ $t('settings.data.exportAliasData') }}
           </div>
         </div>
       </div>
@@ -120,7 +109,7 @@
   </SettingsLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SettingsLayout from './../../Layouts/SettingsLayout.vue'
 import { useForm } from '@inertiajs/vue3'
 

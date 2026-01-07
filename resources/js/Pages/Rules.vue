@@ -1,19 +1,19 @@
 <template>
   <div>
-    <Head :title="$page.component" />
+    <Head :title="$t('rules.title')" />
     <h1 id="primary-heading" class="sr-only">
-      {{ $page.component }}
+      {{ $t('rules.title') }}
     </h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Rules</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('rules.title') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
-          A list of all the rules {{ search ? 'found for your search' : 'in your account' }}
+          {{ search ? $t('rules.descriptionSearch') : $t('rules.descriptionAll') }}
           <button @click="moreInfoOpen = !moreInfoOpen">
-            <InformationCircleIcon
+            <Info
               class="h-6 w-6 inline-block cursor-pointer text-grey-500 dark:text-grey-200"
-              title="Click for more information"
+              :title="$t('rules.moreInfo')"
             />
           </button>
         </p>
@@ -24,7 +24,7 @@
           @click="openCreateModal"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 font-bold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:w-auto"
         >
-          Create Rule
+          {{ $t('rules.create') }}
         </button>
       </div>
     </div>
@@ -37,11 +37,11 @@
           >
             <tr>
               <th scope="col" class="p-3"></th>
-              <th scope="col" class="p-3 text-left">Created</th>
-              <th scope="col" class="p-3 text-left">Name</th>
-              <th scope="col" class="p-3 text-left">Active</th>
+              <th scope="col" class="p-3 text-left">{{ $t('rules.createdAt') }}</th>
+              <th scope="col" class="p-3 text-left">{{ $t('rules.name') }}</th>
+              <th scope="col" class="p-3 text-left">{{ $t('rules.active') }}</th>
               <th scope="col" class="p-3 text-left">
-                Applied
+                {{ $t('rules.applied') }}
                 <span
                   class="tooltip outline-none"
                   data-tippy-content="This is the number of times that the rule has been applied. Hover over the count to see when it was last applied."
@@ -114,7 +114,7 @@
                     type="button"
                     class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium"
                   >
-                    Edit
+                    {{ $t('common.edit') }}
                   </button>
                   <button
                     @click="openDeleteModal(element.id)"
@@ -122,7 +122,7 @@
                     type="button"
                     class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium ml-4"
                   >
-                    Delete
+                    {{ $t('common.delete') }}
                   </button>
                 </td>
               </tr>
@@ -133,12 +133,12 @@
     </div>
 
     <div v-else-if="search" class="text-center">
-      <FunnelIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <Filter class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
-        No Rules found for that search
+        {{ $t('rules.noFound') }}
       </h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Try entering a different search term.
+        {{ $t('rules.tryDifferentSearch') }}
       </p>
       <div class="mt-6">
         <Link
@@ -146,16 +146,16 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          View All Rules
+          {{ $t('rules.viewAll') }}
         </Link>
       </div>
     </div>
 
     <div v-else class="text-center">
-      <FunnelIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
-      <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">No Rules</h3>
+      <Filter class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">{{ $t('rules.noRules') }}</h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Get started by creating a new rule.
+        {{ $t('rules.getStarted') }}
       </p>
       <div class="mt-6">
         <button
@@ -163,8 +163,8 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          <PlusIcon class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-          Create a Rule
+          <Plus class="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+          {{ $t('rules.create') }}
         </button>
       </div>
     </div>
@@ -174,7 +174,7 @@
       @close="createRuleModalOpen = false"
       max-width="md:max-w-3xl"
     >
-      <template v-slot:title> Create new rule </template>
+      <template v-slot:title> {{ $t('rules.createNew') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Rules work on all emails, including replies and also send froms. New conditions and
@@ -496,21 +496,21 @@
             class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="createRuleLoading"
           >
-            Create Rule
+            {{ $t('rules.create') }}
             <loader v-if="createRuleLoading" />
           </button>
           <button
             @click="createRuleModalOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="editRuleModalOpen" @close="closeEditModal" max-width="md:max-w-3xl">
-      <template v-slot:title> Edit rule </template>
+      <template v-slot:title> {{ $t('rules.edit') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Rules work on all emails, including replies and also send froms. New conditions and
@@ -829,21 +829,21 @@
             class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="editRuleLoading"
           >
-            Save
+            {{ $t('common.save') }}
             <loader v-if="editRuleLoading" />
           </button>
           <button
             @click="closeEditModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="deleteRuleModalOpen" @close="closeDeleteModal">
-      <template v-slot:title> Delete rule </template>
+      <template v-slot:title> {{ $t('rules.deleteRule') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Are you sure you want to delete this rule?
@@ -855,21 +855,21 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteRuleLoading"
           >
-            Delete rule
+            {{ $t('rules.deleteRule') }}
             <loader v-if="deleteRuleLoading" />
           </button>
           <button
             @click="closeDeleteModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="moreInfoOpen" @close="moreInfoOpen = false">
-      <template v-slot:title> More information </template>
+      <template v-slot:title> {{ $t('rules.moreInfo') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Rules can be used to perform different actions if certain conditions are met.
@@ -891,7 +891,7 @@
             @click="moreInfoOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Close
+            {{ $t('common.close') }}
           </button>
         </div>
       </template>
@@ -899,18 +899,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import Modal from '../Components/Modal.vue'
+
+const { t } = useI18n()
 import Toggle from '../Components/Toggle.vue'
 import { roundArrow } from 'tippy.js'
 import tippy from 'tippy.js'
 import draggable from 'vuedraggable'
 import Multiselect from '@vueform/multiselect'
 import { notify } from '@kyvg/vue3-notification'
-import { InformationCircleIcon, FunnelIcon } from '@heroicons/vue/24/outline'
-import { PlusIcon } from '@heroicons/vue/20/solid'
+import { Info, Filter, Plus } from 'lucide-vue-next'
 
 const props = defineProps({
   initialRows: {

@@ -7,8 +7,8 @@
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Settings</h1>
-        <p class="mt-2 text-sm text-grey-700 dark:text-grey-100">Make changes to your account</p>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('settings.title') }}</h1>
+        <p class="mt-2 text-sm text-grey-700 dark:text-grey-100">{{ $t('settings.description') }}</p>
       </div>
     </div>
 
@@ -71,33 +71,40 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Link, Head, router } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const tabs = [
-  { name: 'General', href: route('settings.show'), current: route().current() === 'settings.show' },
-  {
-    name: 'Security',
-    href: route('settings.security'),
-    current: route().current() === 'settings.security',
-  },
-  { name: 'API Keys', href: route('settings.api'), current: route().current() === 'settings.api' },
-  {
-    name: 'Account Data',
-    href: route('settings.data'),
-    current: route().current() === 'settings.data',
-  },
-  {
-    name: 'Delete Account',
-    href: route('settings.account'),
-    current: route().current() === 'settings.account',
-  },
-]
+const { t } = useI18n()
 
-const selectedTabName = ref(_.find(tabs, ['current', true]).name)
+interface Tab {
+  name: string
+  href: string
+  current: boolean
+}
+
+const tabs = computed<Tab[]>(() => [
+  { name: t('settings.generalTab'), href: route('settings.show'), current: route().current() === 'settings.show' },
+  { name: t('settings.securityTab'), href: route('settings.security'), current: route().current() === 'settings.security' },
+  { name: t('settings.apiKeys'), href: route('settings.api'), current: route().current() === 'settings.api' },
+  { name: t('settings.accountData'), href: route('settings.data'), current: route().current() === 'settings.data' },
+  { name: t('settings.deleteAccount'), href: route('settings.account'), current: route().current() === 'settings.account' },
+])
+
+const currentTab = computed(() => tabs.value.find(tab => tab.current) as Tab)
+const selectedTabName = ref('')
+
+// 초기화: currentTab이 계산된 후 selectedTabName 설정
+const initSelectedTab = () => {
+  if (currentTab.value) {
+    selectedTabName.value = currentTab.value.name
+  }
+}
+initSelectedTab()
 
 const visitTab = () => {
-  router.visit(_.find(tabs, ['name', selectedTabName.value]).href)
+  const tab = tabs.value.find(tab => tab.name === selectedTabName.value) as Tab
+  router.visit(tab.href)
 }
 </script>

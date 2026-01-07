@@ -1,15 +1,15 @@
 <template>
   <div>
-    <Head title="Recipients" />
-    <h1 id="primary-heading" class="sr-only">Recipients</h1>
+    <Head :title="$t('recipients.title')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('recipients.title') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Recipients</h1>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('recipients.title') }}</h1>
         <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">
-          A list of all the recipients {{ search ? 'found for your search' : 'in your account' }}
+          {{ search ? $t('recipients.descriptionSearch') : $t('recipients.descriptionAll') }}
           <button @click="moreInfoOpen = !moreInfoOpen">
-            <InformationCircleIcon
+            <Info
               class="h-6 w-6 inline-block cursor-pointer text-grey-500 dark:text-grey-200"
               title="Click for more information"
             />
@@ -22,7 +22,7 @@
           @click="openAddRecipientModal"
           class="inline-flex items-center justify-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 font-bold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:w-auto"
         >
-          Add Recipient
+          {{ $t('recipients.create') }}
         </button>
       </div>
     </div>
@@ -84,14 +84,14 @@
             v-if="isDefault(props.row.id)"
             class="ml-3 py-1 px-2 text-sm bg-yellow-200 text-yellow-900 rounded-full tooltip"
             data-tippy-content="This is your account's default recipient"
-            >default</span
+            >{{ $t('recipients.default') }}</span
           >
 
           <span
             v-else-if="props.row.email_verified_at"
             class="block text-grey-400 text-sm py-1 dark:text-grey-300"
           >
-            <button @click="openMakeDefaultModal(props.row)">Make Default</button>
+            <button @click="openMakeDefaultModal(props.row)">{{ $t('recipients.makeDefault') }}</button>
           </span>
         </span>
         <span v-else-if="props.column.field === 'aliases'">
@@ -150,7 +150,7 @@
             @click="openRecipientKeyModal(props.row)"
             class="text-sm text-grey-500 dark:text-grey-300 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Add PGP key
+            {{ $t('recipients.addPGPKey') }}
           </button>
         </span>
         <span v-else-if="props.column.field === 'email_verified_at'">
@@ -162,7 +162,7 @@
             "
             class="tooltip py-1 px-2 bg-green-100 text-green-800 rounded-full text-xs font-semibold leading-5"
           >
-            verified
+            {{ $t('recipients.verified') }}
           </span>
           <button
             v-else
@@ -170,7 +170,7 @@
             class="text-sm disabled:cursor-not-allowed rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             :disabled="resendVerificationLoading"
           >
-            Resend email
+            {{ $t('recipients.resendEmail') }}
           </button>
         </span>
         <span v-else class="outline-none whitespace-nowrap" tabindex="-1">
@@ -179,7 +179,7 @@
             as="button"
             type="button"
             class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium"
-            >Edit<span class="sr-only">, {{ props.row.email }}</span></Link
+            >{{ $t('common.edit') }}<span class="sr-only">, {{ props.row.email }}</span></Link
           >
           <button
             v-if="!isDefault(props.row.id)"
@@ -188,19 +188,19 @@
             type="button"
             class="text-indigo-500 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-500 font-medium ml-4"
           >
-            Delete<span class="sr-only">, {{ props.row.email }}</span>
+            {{ $t('common.delete') }}<span class="sr-only">, {{ props.row.email }}</span>
           </button>
         </span>
       </template>
     </vue-good-table>
 
     <div v-else class="text-center">
-      <InboxArrowDownIcon class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
+      <Inbox class="mx-auto h-16 w-16 text-grey-400 dark:text-grey-200" />
       <h3 class="mt-2 text-lg font-medium text-grey-900 dark:text-white">
-        No Recipients found for that search
+        {{ $t('recipients.noFound') }}
       </h3>
       <p class="mt-1 text-md text-grey-500 dark:text-grey-200">
-        Try entering a different search term.
+        {{ $t('recipients.tryDifferentSearch') }}
       </p>
       <div class="mt-6">
         <Link
@@ -208,13 +208,13 @@
           type="button"
           class="inline-flex items-center rounded-md border border-transparent bg-cyan-400 hover:bg-cyan-300 text-cyan-900 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none"
         >
-          View All Recipients
+          {{ $t('recipients.viewAll') }}
         </Link>
       </div>
     </div>
 
     <Modal :open="addRecipientModalOpen" @close="addRecipientModalOpen = false">
-      <template v-slot:title> Add new recipient </template>
+      <template v-slot:title> {{ $t('recipients.addNew') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Enter the individual email of the new recipient you'd like to add. This is where your
@@ -242,14 +242,14 @@
               class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
               :disabled="addRecipientLoading"
             >
-              Add Recipient
+              {{ $t('recipients.create') }}
               <loader v-if="addRecipientLoading" />
             </button>
             <button
               @click="addRecipientModalOpen = false"
               class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Cancel
+              {{ $t('common.cancel') }}
             </button>
           </div>
         </div>
@@ -257,7 +257,7 @@
     </Modal>
 
     <Modal :open="addRecipientKeyModalOpen" @close="closeRecipientKeyModal">
-      <template v-slot:title> Add Public GPG Key </template>
+      <template v-slot:title> {{ $t('recipients.addPublicKey') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Enter your <b>PUBLIC</b> key data in the text area below.
@@ -295,14 +295,14 @@
               class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
               :disabled="addRecipientKeyLoading"
             >
-              Add Key
+              {{ $t('recipients.addKey') }}
               <loader v-if="addRecipientKeyLoading" />
             </button>
             <button
               @click="closeRecipientKeyModal"
               class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Cancel
+              {{ $t('common.cancel') }}
             </button>
           </div>
         </div>
@@ -310,7 +310,7 @@
     </Modal>
 
     <Modal :open="deleteRecipientKeyModalOpen" @close="closeDeleteRecipientKeyModal">
-      <template v-slot:title> Remove recipient public key </template>
+      <template v-slot:title> {{ $t('recipients.removePublicKey') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Are you sure you want to remove the public key for this recipient? It will also be removed
@@ -323,21 +323,21 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteRecipientKeyLoading"
           >
-            Remove public key
+            {{ $t('recipients.removePublicKey') }}
             <loader v-if="deleteRecipientLoading" />
           </button>
           <button
             @click="closeDeleteRecipientKeyModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="deleteRecipientModalOpen" @close="closeDeleteModal">
-      <template v-slot:title> Delete recipient </template>
+      <template v-slot:title> {{ $t('recipients.deleteRecipient') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           Are you sure you want to delete this recipient?
@@ -349,21 +349,21 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteRecipientLoading"
           >
-            Delete recipient
+            {{ $t('recipients.deleteRecipient') }}
             <loader v-if="deleteRecipientLoading" />
           </button>
           <button
             @click="closeDeleteModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="makeDefaultModalOpen" @close="closeMakeDefaultModal">
-      <template v-slot:title> Make default recipient</template>
+      <template v-slot:title> {{ $t('recipients.makeDefaultRecipient') }}</template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           The default recipient for your account is used for all general email notifications.
@@ -378,21 +378,21 @@
             class="bg-cyan-400 hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="makeDefaultLoading"
           >
-            Make default recipient
+            {{ $t('recipients.makeDefaultRecipient') }}
             <loader v-if="makeDefaultLoading" />
           </button>
           <button
             @click="closeMakeDefaultModal"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
     </Modal>
 
     <Modal :open="moreInfoOpen" @close="moreInfoOpen = false">
-      <template v-slot:title> More information </template>
+      <template v-slot:title> {{ $t('recipients.moreInfo') }} </template>
       <template v-slot:content>
         <p class="mt-4 text-grey-700 dark:text-grey-200">
           This page shows all of the recipients in your account, these are your real email addresses
@@ -411,7 +411,7 @@
             @click="moreInfoOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Close
+            {{ $t('common.close') }}
           </button>
         </div>
       </template>
@@ -419,16 +419,19 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
+<script setup lang="ts">
+import { onMounted, ref, computed } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import Modal from '../../Components/Modal.vue'
 import Toggle from '../../Components/Toggle.vue'
 import { roundArrow } from 'tippy.js'
 import tippy from 'tippy.js'
 import { VueGoodTable } from 'vue-good-table-next'
 import { notify } from '@kyvg/vue3-notification'
-import { InformationCircleIcon, InboxArrowDownIcon } from '@heroicons/vue/24/outline'
+import { Info, Inbox } from 'lucide-vue-next'
 
 const props = defineProps({
   initialRows: {
@@ -467,37 +470,37 @@ const resendVerificationLoading = ref(false)
 const tippyInstance = ref(null)
 const errors = ref({})
 
-const columns = [
+const columns = computed(() => [
   {
-    label: 'Created',
+    label: t('recipients.createdAt'),
     field: 'created_at',
     globalSearchDisabled: true,
   },
   {
-    label: 'Key',
+    label: t('recipients.key'),
     field: 'key',
     sortable: false,
     type: 'number',
   },
   {
-    label: 'Email',
+    label: t('recipients.email'),
     field: 'email',
   },
   {
-    label: 'Alias Count',
+    label: t('recipients.aliasCount'),
     field: 'aliases',
     sortable: false,
     globalSearchDisabled: true,
   },
   {
-    label: 'Encryption',
+    label: t('recipients.encryption'),
     field: 'should_encrypt',
     type: 'boolean',
     globalSearchDisabled: true,
     sortable: false,
   },
   {
-    label: 'Verified',
+    label: t('recipients.verified'),
     field: 'email_verified_at',
     globalSearchDisabled: true,
   },
@@ -507,7 +510,7 @@ const columns = [
     sortable: false,
     globalSearchDisabled: true,
   },
-]
+])
 
 onMounted(() => {
   defaultRecipient.value = _.find(rows.value, ['id', defaultRecipientId.value])

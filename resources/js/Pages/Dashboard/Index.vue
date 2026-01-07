@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Head title="Dashboard" />
-    <h1 id="primary-heading" class="sr-only">Dashboard</h1>
+    <Head :title="$t('dashboard.title')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('dashboard.title') }}</h1>
 
     <div
       v-if="bandwidthPercentage === 100"
@@ -10,16 +10,15 @@
     >
       <div class="flex items-center mb-2">
         <span class="rounded-full bg-yellow-400 uppercase px-2 py-1 text-xs font-bold mr-2"
-          >Warning</span
+          >{{ $t('dashboard.bandwidth.warning') }}</span
         >
         <div>
-          Exceeded bandwidth limit for <b>{{ month }}</b
-          >.
+          {{ $t('dashboard.bandwidth.exceeded', { month }) }}
         </div>
       </div>
     </div>
 
-    <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Dashboard</h1>
+    <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('dashboard.title') }}</h1>
 
     <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
       <div
@@ -45,7 +44,7 @@
                 :href="item.url"
                 class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
               >
-                View all<span class="sr-only"> {{ item.name }} stats</span>
+                {{ $t('common.viewAll') }}<span class="sr-only"> {{ item.name }} stats</span>
               </Link>
             </div>
           </div>
@@ -54,7 +53,7 @@
     </dl>
 
     <h3 class="mt-6 text-base font-semibold leading-6 text-grey-600 dark:text-grey-200">
-      Bandwidth ({{ month }})
+      {{ $t('dashboard.bandwidth.title') }} ({{ month }})
     </h3>
 
     <div class="mt-6">
@@ -74,7 +73,7 @@
     </div>
 
     <div class="mt-6">
-      <h3 class="text-base font-semibold leading-6 text-grey-600 dark:text-grey-200">Aliases</h3>
+      <h3 class="text-base font-semibold leading-6 text-grey-600 dark:text-grey-200">{{ $t('nav.aliases') }}</h3>
 
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div
@@ -100,8 +99,7 @@
                   :href="item.url"
                   class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
                 >
-                  {{ item.id === 1 ? 'View All' : `View ${item.name}`
-                  }}<span class="sr-only"> {{ item.name }} stats</span>
+                  {{ $t('common.viewAll') }}<span class="sr-only"> {{ item.name }} stats</span>
                 </Link>
               </div>
             </div>
@@ -109,7 +107,7 @@
         </div>
       </dl>
 
-      <h3 class="mt-6 text-base font-semibold leading-6 text-grey-600 dark:text-grey-200">Stats</h3>
+      <h3 class="mt-6 text-base font-semibold leading-6 text-grey-600 dark:text-grey-200">{{ $t('dashboard.statistics') }}</h3>
 
       <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         <div class="relative overflow-hidden rounded-lg bg-white p-4 shadow dark:bg-grey-900">
@@ -119,7 +117,7 @@
               class="inline-block w-16 h-16 text-indigo-50 stroke-current absolute top-0 right-0"
             />
             <p class="truncate text-sm font-medium text-grey-400 dark:text-grey-200">
-              Emails Forwarded
+              {{ $t('dashboard.emails.forwarded') }}
             </p>
           </dt>
           <dd class="flex items-baseline">
@@ -135,7 +133,7 @@
               class="inline-block w-16 h-16 text-indigo-50 stroke-current absolute top-0 right-0"
             />
             <p class="truncate text-sm font-medium text-grey-400 dark:text-grey-200">
-              Emails Blocked
+              {{ $t('dashboard.emails.blocked') }}
             </p>
           </dt>
           <dd class="flex items-baseline">
@@ -151,7 +149,7 @@
               class="inline-block w-16 h-16 text-indigo-50 stroke-current absolute top-0 right-0"
             />
             <p class="truncate text-sm font-medium text-grey-400 dark:text-grey-200">
-              Email Replies
+              {{ $t('dashboard.emails.replies') }}
             </p>
           </dt>
           <dd class="flex items-baseline">
@@ -166,7 +164,7 @@
               name="arrow-right"
               class="inline-block w-16 h-16 text-indigo-50 stroke-current absolute top-0 right-0"
             />
-            <p class="truncate text-sm font-medium text-grey-400 dark:text-grey-200">Emails Sent</p>
+            <p class="truncate text-sm font-medium text-grey-400 dark:text-grey-200">{{ $t('dashboard.emails.sent') }}</p>
           </dt>
           <dd class="flex items-baseline">
             <p class="text-3xl font-semibold text-indigo-800 dark:text-indigo-400">
@@ -178,7 +176,7 @@
     </div>
 
     <h3 class="mt-6 text-base font-semibold leading-6 text-grey-600 dark:text-grey-200">
-      Outbound Messages Last 7 Days <loader v-if="chartsLoading" />
+      {{ $t('dashboard.chart.outboundMessages') }} {{ $t('dashboard.chart.last7Days') }} <loader v-if="chartsLoading" />
     </h3>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div
@@ -195,7 +193,7 @@
         class="mt-5 bg-white overflow-hidden shadow sm:rounded-lg p-4 flex justify-center max-h-80 dark:bg-grey-900"
       >
         <div v-if="!outboundMessageTotals" class="flex items-center justify-center">
-          No data to display
+          {{ $t('common.noData') }}
         </div>
         <outbound-messages-pie v-else :totals="outboundMessageTotals" />
       </div>
@@ -203,60 +201,55 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, computed, onMounted, type Component } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import {
-  AtSymbolIcon,
-  InboxArrowDownIcon,
-  UsersIcon,
-  GlobeAltIcon,
-  FunnelIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  TrashIcon,
-} from '@heroicons/vue/24/outline'
+  AtSign,
+  Inbox,
+  Users,
+  Globe,
+  Filter,
+  CheckCircle,
+  XCircle,
+  Trash2,
+} from 'lucide-vue-next'
 import OutboundMessagesGraph from './OutboundMessagesGraph.vue'
 import OutboundMessagesPie from './OutboundMessagesPie.vue'
 
-const props = defineProps({
-  totals: {
-    type: Object,
-    required: true,
-  },
-  bandwidthMb: {
-    type: Number,
-    required: true,
-  },
-  bandwidthLimit: {
-    type: Number,
-    required: true,
-  },
-  month: {
-    type: String,
-    required: true,
-  },
-  aliases: {
-    type: Number,
-    required: true,
-  },
-  recipients: {
-    type: Number,
-    required: true,
-  },
-  usernames: {
-    type: Number,
-    required: true,
-  },
-  domains: {
-    type: Number,
-    required: true,
-  },
-  rules: {
-    type: Number,
-    required: true,
-  },
-})
+const { t } = useI18n()
+
+interface Totals {
+  forwarded: number | string
+  blocked: number | string
+  replies: number | string
+  sent: number
+  total: number | string
+  active: number | string
+  inactive: number | string
+  deleted: number | string
+}
+
+interface StatItem {
+  id: number
+  name: string
+  stat: number
+  icon: Component
+  url: string
+}
+
+const props = defineProps<{
+  totals: Totals
+  bandwidthMb: number
+  bandwidthLimit: number
+  month: string
+  aliases: number
+  recipients: number
+  usernames: number
+  domains: number
+  rules: number
+}>()
 
 const chartsLoading = ref(true)
 const forwardsData = ref([])
@@ -303,72 +296,72 @@ const bandwidthPercentageClass = computed(() => {
   return 'from-cyan-500 to-indigo-500'
 })
 
-const stats = [
+const stats = computed<StatItem[]>(() => [
   {
     id: 1,
-    name: 'Shared Domain Aliases',
+    name: t('aliases.sharedDomain'),
     stat: props.aliases,
-    icon: AtSymbolIcon,
+    icon: AtSign,
     url: route('aliases.index', { shared_domain: 'true', active: 'true' }),
   },
   {
     id: 2,
-    name: 'Recipients',
+    name: t('nav.recipients'),
     stat: props.recipients,
-    icon: InboxArrowDownIcon,
+    icon: Inbox,
     url: route('recipients.index'),
   },
   {
     id: 3,
-    name: 'Usernames',
+    name: t('nav.usernames'),
     stat: props.usernames,
-    icon: UsersIcon,
+    icon: Users,
     url: route('usernames.index'),
   },
   {
     id: 4,
-    name: 'Domains',
+    name: t('nav.domains'),
     stat: props.domains,
-    icon: GlobeAltIcon,
+    icon: Globe,
     url: route('domains.index'),
   },
   {
     id: 5,
-    name: `Rules`,
+    name: t('nav.rules'),
     stat: props.rules,
-    icon: FunnelIcon,
+    icon: Filter,
     url: route('rules.index'),
   },
-]
+])
 
-const aliasStats = [
+const aliasStats = computed<StatItem[]>(() => [
   {
     id: 1,
-    name: 'Total Aliases',
-    stat: parseInt(props.totals.total),
-    icon: AtSymbolIcon,
+    name: t('dashboard.aliases.total'),
+    stat: parseInt(String(props.totals.total)),
+    icon: AtSign,
     url: route('aliases.index', { deleted: 'with' }),
   },
   {
     id: 2,
-    name: 'Active',
-    stat: parseInt(props.totals.active),
-    icon: CheckCircleIcon,
+    name: t('common.active'),
+    stat: parseInt(String(props.totals.active)),
+    icon: CheckCircle,
     url: route('aliases.index', { active: 'true' }),
   },
   {
     id: 3,
-    name: 'Inactive',
-    stat: parseInt(props.totals.inactive),
-    icon: XCircleIcon,
+    name: t('common.inactive'),
+    stat: parseInt(String(props.totals.inactive)),
+    icon: XCircle,
     url: route('aliases.index', { active: 'false' }),
   },
   {
     id: 4,
-    name: 'Deleted',
-    stat: parseInt(props.totals.deleted),
-    icon: TrashIcon,
+    name: t('filters.deleted'),
+    stat: parseInt(String(props.totals.deleted)),
+    icon: Trash2,
     url: route('aliases.index', { deleted: 'only' }),
   },
-]
+])
 </script>

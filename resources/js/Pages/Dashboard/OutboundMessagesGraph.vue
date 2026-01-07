@@ -2,7 +2,7 @@
   <Line :options="chartOptions" :data="chartData" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import {
   Chart as ChartJS,

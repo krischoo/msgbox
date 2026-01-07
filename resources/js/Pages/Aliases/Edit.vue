@@ -92,7 +92,7 @@
                   v-if="errors.from_name"
                   class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                 >
-                  <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                  <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                 </div>
               </div>
               <p v-if="errors.from_name" class="mt-2 text-sm text-red-600" id="from-name-error">
@@ -143,13 +143,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { notify } from '@kyvg/vue3-notification'
 import { roundArrow } from 'tippy.js'
 import tippy from 'tippy.js'
-import { ExclamationCircleIcon } from '@heroicons/vue/20/solid'
+import { AlertCircle } from 'lucide-vue-next'
 import Toggle from '../../Components/Toggle.vue'
 
 const props = defineProps({

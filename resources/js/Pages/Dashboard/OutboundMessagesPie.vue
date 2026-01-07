@@ -2,7 +2,7 @@
   <Doughnut :data="chartData" :options="chartOptions" style="max-height: 350px" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'

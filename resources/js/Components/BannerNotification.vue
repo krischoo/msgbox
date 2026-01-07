@@ -19,7 +19,7 @@
               :class="colours.bgHover"
             >
               <span class="sr-only">Dismiss</span>
-              <XMarkIcon class="h-6 w-6" :class="colours.text" aria-hidden="true" />
+              <X class="h-6 w-6" :class="colours.text" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -28,26 +28,39 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
-import { ExclamationCircleIcon, InformationCircleIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { CheckCircleIcon } from '@heroicons/vue/24/outline'
+<script setup lang="ts">
+import { computed, type Component } from 'vue'
+import { AlertCircle, Info, X, CheckCircle } from 'lucide-vue-next'
 
-const props = defineProps(['modelValue', 'status'])
-const emit = defineEmits(['update:modelValue'])
+const props = defineProps<{
+  modelValue: boolean
+  status?: 'info' | 'error' | 'success'
+}>()
+
+const emit = defineEmits<{
+  'update:modelValue': [value: boolean]
+}>()
 
 function closeNotification() {
   emit('update:modelValue', false)
 }
 
-const colours = computed(function () {
+interface ColourConfig {
+  bgLight: string
+  bgDark: string
+  bgHover: string
+  text: string
+  icon: Component
+}
+
+const colours = computed<ColourConfig>(() => {
   if (props.status === 'info') {
     return {
       bgLight: 'bg-yellow-100',
       bgDark: 'bg-yellow-700',
       bgHover: 'hover:bg-yellow-200',
       text: 'text-yellow-700',
-      icon: InformationCircleIcon,
+      icon: Info,
     }
   } else if (props.status === 'error') {
     return {
@@ -55,7 +68,7 @@ const colours = computed(function () {
       bgDark: 'bg-red-700',
       bgHover: 'hover:bg-red-200',
       text: 'text-red-700',
-      icon: ExclamationCircleIcon,
+      icon: AlertCircle,
     }
   } else {
     return {
@@ -63,7 +76,7 @@ const colours = computed(function () {
       bgDark: 'bg-green-800',
       bgHover: 'hover:bg-green-200',
       text: 'text-green-800',
-      icon: CheckCircleIcon,
+      icon: CheckCircle,
     }
   }
 })

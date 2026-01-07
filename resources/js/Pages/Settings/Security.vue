@@ -7,20 +7,15 @@
         role="alert"
       >
         <div class="flex items-center mb-2">
-          <span class="rounded-full bg-yellow-400 uppercase px-2 py-1 text-xs font-bold mr-2"
-            >Important</span
-          >
-          <div>
-            2FA successfully enabled! Please <b>make a copy of your backup code below</b>. If you
-            have an old backup code saved <b>you must update it with this one.</b> If you lose your
-            2FA device you can use this backup code to disable 2FA on your account.
-            <b>This is the only time this code will be displayed, so be sure not to lose it!</b>
-          </div>
+          <span class="rounded-full bg-yellow-400 uppercase px-2 py-1 text-xs font-bold mr-2">{{
+            $t('common.important')
+          }}</span>
+          <div v-html="$t('settings.security.backupCodeEnabledAlert')"></div>
         </div>
         <pre
           @click="clipboard(backupCode)"
           class="flex p-3 text-grey-900 bg-white border rounded cursor-pointer"
-          title="Copy To Clipboard"
+          :title="$t('common.copyToClipboard')"
         >
               <code class="break-all whitespace-normal">{{ backupCode }}</code>
           </pre>
@@ -28,12 +23,10 @@
       <div class="py-10">
         <div class="space-y-1">
           <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-            Update Password
+            {{ $t('settings.security.updatePassword') }}
           </h3>
           <p class="text-base text-grey-700 dark:text-grey-200">
-            Ensure your account is using a long, random, unique password to stay secure. It is
-            recommended to use a password manager such as Bitwarden. Updating your password will
-            also logout your active sessions on other browsers and devices.
+            {{ $t('settings.security.updatePasswordDesc') }}
           </p>
         </div>
         <div class="mt-4">
@@ -51,7 +44,7 @@
                   <label
                     for="current"
                     class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                    >Current Password</label
+                    >{{ $t('settings.security.currentPassword') }}</label
                   >
                   <div class="relative mt-2">
                     <input
@@ -76,7 +69,7 @@
                       v-if="updatePasswordForm.errors.current"
                       class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                     >
-                      <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                      <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                     </div>
                   </div>
                   <p
@@ -92,7 +85,7 @@
                   <label
                     for="password"
                     class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                    >New Password</label
+                    >{{ $t('settings.security.newPassword') }}</label
                   >
                   <div class="relative mt-2">
                     <input
@@ -117,7 +110,7 @@
                       v-if="updatePasswordForm.errors.password"
                       class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                     >
-                      <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                      <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                     </div>
                   </div>
                   <p
@@ -133,7 +126,7 @@
                   <label
                     for="password-confirm"
                     class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                    >Confirm New Password</label
+                    >{{ $t('settings.security.confirmNewPassword') }}</label
                   >
                   <div class="relative mt-2">
                     <input
@@ -155,7 +148,7 @@
               :disabled="updatePasswordForm.processing"
               class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             >
-              Update Password
+              {{ $t('settings.security.updatePassword') }}
               <loader v-if="updatePasswordForm.processing" />
             </button>
           </form>
@@ -165,12 +158,10 @@
       <div class="py-10">
         <div class="space-y-1">
           <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-            Browser Sessions
+            {{ $t('settings.security.browserSessions') }}
           </h3>
           <p class="text-base text-grey-700 dark:text-grey-200">
-            If necessary, you may logout of all of your other browser sessions across all of your
-            devices. If you feel your account has been compromised, you should also update your
-            password.
+            {{ $t('settings.security.browserSessionsDesc') }}
           </p>
         </div>
         <div class="mt-4">
@@ -187,7 +178,7 @@
                 <label
                   for="browser-sessions"
                   class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                  >Current Password</label
+                  >{{ $t('settings.security.currentPassword') }}</label
                 >
                 <div class="relative mt-2">
                   <input
@@ -212,7 +203,7 @@
                     v-if="browserSessionsForm.errors.current"
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                   >
-                    <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                    <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                   </div>
                 </div>
                 <p
@@ -230,7 +221,7 @@
               :disabled="browserSessionsForm.processing"
               class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             >
-              Logout Other Browser Sessions
+              {{ $t('settings.security.logoutOtherSessions') }}
               <loader v-if="browserSessionsForm.processing" />
             </button>
           </form>
@@ -240,19 +231,12 @@
       <div class="py-10">
         <div class="space-y-1">
           <h2 class="text-xl font-medium leading-6 text-grey-900 dark:text-white">
-            Two-Factor Authentication
+            {{ $t('settings.security.twoFactorAuth') }}
           </h2>
-          <p class="text-base text-grey-700 dark:text-grey-200">
-            Two-factor authentication, also known as 2FA or multi-factor, adds an extra layer of
-            security to your account beyond your username and password. There are
-            <b>multiple options for 2FA</b> - 1. Authentication App (e.g. Google Authenticator or
-            another, Aegis, andOTP) 2. Hardware Security Key (e.g. YubiKey, SoloKey, Nitrokey) 3.
-            Passkeys (which can be stored in a supported provider such as Bitwarden or 1Password).
+          <p class="text-base text-grey-700 dark:text-grey-200" v-html="$t('settings.security.twoFactorAuthDesc1')">
           </p>
           <p class="text-base text-grey-700 dark:text-grey-200">
-            When you login with 2FA enabled, you will be prompted to use a security key or enter a
-            OTP (one time passcode) depending on which method you choose below. You can only have
-            one method of 2nd factor authentication enabled at once.
+            {{ $t('settings.security.twoFactorAuthDesc2') }}
           </p>
         </div>
       </div>
@@ -260,15 +244,9 @@
       <div v-if="twoFactorEnabled || webauthnEnabled" class="py-10">
         <div class="space-y-1">
           <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-            Generate New Backup Code
+            {{ $t('settings.security.generateBackupCode') }}
           </h3>
-          <p class="text-base text-grey-700 dark:text-grey-200">
-            The backup code can be used in a situation where you have lost your 2FA device to allow
-            you to access your account. If you've forgotten or lost your backup code then you can
-            generate a new one by clicking the button below.
-            <b>This code will only be displayed once</b> so make sure you store it in a
-            <b>secure place</b>. If you have an old backup code saved
-            <b>you must update it with this one</b>.
+          <p class="text-base text-grey-700 dark:text-grey-200" v-html="$t('settings.security.generateBackupCodeDesc')">
           </p>
         </div>
         <div
@@ -277,20 +255,15 @@
           role="alert"
         >
           <div class="flex items-center mb-2">
-            <span class="rounded-full bg-yellow-400 uppercase px-2 py-1 text-xs font-bold mr-2"
-              >Important</span
-            >
-            <div>
-              Please <b>make a copy of your backup code below</b>. If you have an old backup code
-              saved <b>you must update it with this one.</b> If you lose your 2FA device you can use
-              this backup code to disable 2FA on your account.
-              <b>This is the only time this code will be displayed, so be sure not to lose it!</b>
-            </div>
+            <span class="rounded-full bg-yellow-400 uppercase px-2 py-1 text-xs font-bold mr-2">{{
+              $t('common.important')
+            }}</span>
+            <div v-html="$t('settings.security.backupCodeAlert')"></div>
           </div>
           <pre
             @click="clipboard(regeneratedBackupCode)"
             class="flex p-3 text-grey-900 bg-white border rounded cursor-pointer"
-            title="Copy To Clipboard"
+            :title="$t('common.copyToClipboard')"
           >
                 <code class="break-all whitespace-normal">{{ regeneratedBackupCode }}</code>
             </pre>
@@ -308,7 +281,7 @@
               <label
                 for="new-backup-code"
                 class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                >Current Password</label
+                >{{ $t('settings.security.currentPassword') }}</label
               >
               <div class="relative mt-2">
                 <input
@@ -333,7 +306,7 @@
                   v-if="newBackupCodeForm.errors.current"
                   class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                 >
-                  <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                  <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                 </div>
               </div>
               <p
@@ -349,7 +322,7 @@
               :disabled="newBackupCodeForm.processing"
               class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             >
-              Generate New Backup Code
+              {{ $t('settings.security.generateBackupCode') }}
               <loader v-if="newBackupCodeForm.processing" />
             </button>
           </form>
@@ -359,11 +332,10 @@
       <div v-if="twoFactorEnabled" class="py-10">
         <div class="space-y-1">
           <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-            Disable Authentication App (TOTP)
+            {{ $t('settings.security.disableTotp') }}
           </h3>
           <p class="text-base text-grey-700 dark:text-grey-200">
-            To disable TOTP authentication enter your password below. You can always enable it again
-            later if you wish.
+            {{ $t('settings.security.disableTotpDesc') }}
           </p>
         </div>
         <div class="mt-4">
@@ -380,7 +352,7 @@
                 <label
                   for="disable-two-factor"
                   class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                  >Current Password</label
+                  >{{ $t('settings.security.currentPassword') }}</label
                 >
                 <div class="relative mt-2">
                   <input
@@ -405,7 +377,7 @@
                     v-if="disableTwoFactorForm.errors.current"
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                   >
-                    <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                    <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                   </div>
                 </div>
                 <p
@@ -423,7 +395,7 @@
               :disabled="disableTwoFactorForm.processing"
               class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             >
-              Disable TOTP Two-Factor Authentication
+              {{ $t('settings.security.disableTotpBtn') }}
               <loader v-if="disableTwoFactorForm.processing" />
             </button>
           </form>
@@ -434,18 +406,15 @@
         <div class="py-10">
           <div class="space-y-1">
             <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-              Enable Authentication App (TOTP)
+              {{ $t('settings.security.enableTotp') }}
             </h3>
             <p class="text-base text-grey-700 dark:text-grey-200">
-              TOTP two-factor authentication requires the use of Google Authenticator or another
-              compatible app such as Aegis or andOTP (both on F-droid) for Android. Alternatively,
-              you can use the code below. Make sure that you write down your secret code in a safe
-              place.
+              {{ $t('settings.security.enableTotpDesc') }}
             </p>
           </div>
           <div class="mt-4">
             <span v-html="qrCode"></span>
-            <p class="mb-2">Secret: {{ authSecret }}</p>
+            <p class="mb-2">{{ $t('settings.security.secret') }}: {{ authSecret }}</p>
             <form
               @submit.prevent="
                 regenerateTwoFactorForm.post(route('settings.2fa_regenerate'), {
@@ -457,7 +426,7 @@
                 type="submit"
                 :disabled="regenerateTwoFactorForm.processing"
                 class="text-indigo-900 bg-transparent cursor-pointer disabled:cursor-not-allowed dark:text-indigo-400"
-                value="Click here to regenerate your secret key"
+                :value="$t('settings.security.regenerateSecret')"
               />
 
               <p
@@ -485,7 +454,7 @@
                   <label
                     for="enable-two-factor"
                     class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                    >Two-Factor Token</label
+                    >{{ $t('settings.security.twoFactorToken') }}</label
                   >
                   <div class="relative mt-2">
                     <input
@@ -514,7 +483,7 @@
                       v-if="enableTwoFactorForm.errors.two_factor_token"
                       class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                     >
-                      <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                      <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                     </div>
                   </div>
                   <p
@@ -529,7 +498,7 @@
                   <label
                     for="enable-two-factor-current"
                     class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                    >Current Password</label
+                    >{{ $t('settings.security.currentPassword') }}</label
                   >
                   <div class="relative mt-2">
                     <input
@@ -556,7 +525,7 @@
                       v-if="enableTwoFactorForm.errors.current"
                       class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                     >
-                      <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                      <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                     </div>
                   </div>
                   <p
@@ -574,7 +543,7 @@
                 :disabled="enableTwoFactorForm.processing"
                 class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
               >
-                Verify and Enable
+                {{ $t('settings.security.verifyAndEnable') }}
                 <loader v-if="enableTwoFactorForm.processing" />
               </button>
             </form>
@@ -584,11 +553,10 @@
       <div v-if="!keys.length" class="py-10">
         <div class="space-y-1">
           <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-            Enable Device/Passkey Authentication (WebAuthn)
+            {{ $t('settings.security.enableWebauthn') }}
           </h3>
           <p class="text-base text-grey-700 dark:text-grey-200">
-            WebAuthn is a new W3C global standard for secure authentication. You can use any
-            hardware key such as a Yubikey, Solokey, NitroKey etc.
+            {{ $t('settings.security.enableWebauthnDesc') }}
           </p>
         </div>
         <div class="mt-4">
@@ -597,7 +565,7 @@
             :href="route('webauthn.create')"
             class="block bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 text-center"
           >
-            Register New Key
+            {{ $t('settings.security.registerNewKey') }}
           </a>
         </div>
       </div>
@@ -605,29 +573,24 @@
         <div class="py-10">
           <div class="space-y-1">
             <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">
-              Device/Passkey Authentication (WebAuthn)
+              {{ $t('settings.security.webauthnKeys') }}
             </h3>
             <p class="text-base text-grey-700 dark:text-grey-200">
-              Hardware security keys and Passkeys that you have registered for 2nd factor
-              authentication. To remove a key simply click the delete button next to it. Disabled
-              keys cannot be used to login. If you disable all keys
-              <b>Two-Factor Authentication</b> will
-              {{ twoFactorEnabled ? 'still be enabled as you have TOTP 2FA' : 'be turned off' }} on
-              your account.
+              <span v-html="twoFactorEnabled ? $t('settings.security.webauthnKeysDescWithTotp') : $t('settings.security.webauthnKeysDescWithoutTotp')"></span>
             </p>
           </div>
           <div class="mt-4">
-            <p class="mb-0" v-if="keys.length === 0">You have not registered any keys.</p>
+            <p class="mb-0" v-if="keys.length === 0">{{ $t('settings.security.noKeysRegistered') }}</p>
 
             <div class="table w-full text-sm md:text-base" v-if="keys.length > 0">
               <div class="table-row">
-                <div class="table-cell p-1 md:p-4 font-semibold">Name</div>
-                <div class="table-cell p-1 md:p-4 font-semibold">Created</div>
-                <div class="table-cell p-1 md:p-4 font-semibold">Enabled</div>
+                <div class="table-cell p-1 md:p-4 font-semibold">{{ $t('common.name') }}</div>
+                <div class="table-cell p-1 md:p-4 font-semibold">{{ $t('common.created') }}</div>
+                <div class="table-cell p-1 md:p-4 font-semibold">{{ $t('common.enabled') }}</div>
                 <div class="table-cell p-1 md:p-4 text-right">
-                  <a href="/webauthn/keys/create" class="text-indigo-700 dark:text-indigo-400"
-                    >Add New Key</a
-                  >
+                  <a href="/webauthn/keys/create" class="text-indigo-700 dark:text-indigo-400">{{
+                    $t('settings.security.addNewKey')
+                  }}</a>
                 </div>
               </div>
               <div
@@ -686,21 +649,21 @@
                     class="text-indigo-500 font-bold cursor-pointer rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-indigo-400"
                     @click="showDisableKeyModal(key)"
                   >
-                    Disable
+                    {{ $t('common.disable') }}
                   </button>
                   <button
                     v-else
                     class="text-indigo-500 font-bold cursor-pointer rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-indigo-400"
                     @click="enableKey(key)"
                   >
-                    Enable
+                    {{ $t('common.enable') }}
                     <loader v-if="key.enableKeyLoading" />
                   </button>
                   <button
                     class="text-red-500 font-bold cursor-pointer sm:ml-4 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     @click="showDeleteKeyModal(key)"
                   >
-                    Delete
+                    {{ $t('common.delete') }}
                   </button>
                 </div>
               </div>
@@ -711,25 +674,26 @@
     </div>
 
     <Modal :open="disableKeyModalOpen" @close="closeDisableKeyModal">
-      <template v-slot:title> Disable Key </template>
+      <template v-slot:title>{{ $t('settings.security.disableKey') }}</template>
       <template v-slot:content>
         <p
           v-if="enabledKeys.length <= 1 && !twoFactorEnabled"
           class="my-4 text-grey-700 dark:text-grey-200"
+          v-html="$t('settings.security.disableKeyWarningNoOther')"
         >
-          Once this key is disabled, <b>Two-Factor Authentication</b> will be disabled on your
-          account as you do not have any other enabled keys.
         </p>
-        <p v-else class="my-4 text-grey-700 dark:text-grey-200">
-          Once this key is disabled, <b>Two-Factor Authentication</b> will still be enabled as you
-          have {{ twoFactorEnabled ? 'TOTP 2FA' : 'other enabled keys' }} on your account.
+        <p
+          v-else
+          class="my-4 text-grey-700 dark:text-grey-200"
+          v-html="twoFactorEnabled ? $t('settings.security.disableKeyWarningTotp') : $t('settings.security.disableKeyWarningOther')"
+        >
         </p>
         <div class="mt-6">
           <label
             for="disable-key-current-password"
             class="block font-medium leading-6 text-grey-600 dark:text-white text-sm my-2"
           >
-            Current Password
+            {{ $t('settings.security.currentPassword') }}
           </label>
           <p v-show="errors.disableKey" class="mb-3 text-red-500 text-sm">
             {{ errors.disableKey }}
@@ -749,14 +713,14 @@
               class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
               :disabled="disableKeyLoading"
             >
-              Disable
+              {{ $t('common.disable') }}
               <loader v-if="disableKeyLoading" />
             </button>
             <button
               @click="closeDisableKeyModal"
               class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Close
+              {{ $t('common.close') }}
             </button>
           </div>
         </div>
@@ -764,25 +728,26 @@
     </Modal>
 
     <Modal :open="deleteKeyModalOpen" @close="closeDeleteKeyModal">
-      <template v-slot:title> Remove Key </template>
+      <template v-slot:title>{{ $t('settings.security.removeKey') }}</template>
       <template v-slot:content>
         <p
           v-if="enabledKeys.length <= 1 && !twoFactorEnabled"
           class="my-4 text-grey-700 dark:text-grey-200"
+          v-html="$t('settings.security.removeKeyWarningNoOther')"
         >
-          Once this key is removed, <b>Two-Factor Authentication</b> will be disabled on your
-          account as you do not have any other enabled keys.
         </p>
-        <p v-else class="my-4 text-grey-700 dark:text-grey-200">
-          Once this key is removed, <b>Two-Factor Authentication</b> will still be enabled as you
-          have {{ twoFactorEnabled ? 'TOTP 2FA' : 'other enabled keys' }} on your account.
+        <p
+          v-else
+          class="my-4 text-grey-700 dark:text-grey-200"
+          v-html="twoFactorEnabled ? $t('settings.security.removeKeyWarningTotp') : $t('settings.security.removeKeyWarningOther')"
+        >
         </p>
         <div class="mt-6">
           <label
             for="delete-key-current-password"
             class="block font-medium leading-6 text-grey-600 text-sm my-2 dark:text-white"
           >
-            Current Password
+            {{ $t('settings.security.currentPassword') }}
           </label>
           <p v-show="errors.deleteKey" class="mb-3 text-red-500 text-sm">
             {{ errors.deleteKey }}
@@ -802,14 +767,14 @@
               class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
               :disabled="deleteKeyLoading"
             >
-              Remove
+              {{ $t('common.remove') }}
               <loader v-if="deleteKeyLoading" />
             </button>
             <button
               @click="closeDeleteKeyModal"
               class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Close
+              {{ $t('common.close') }}
             </button>
           </div>
         </div>
@@ -818,13 +783,16 @@
   </SettingsLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import SettingsLayout from './../../Layouts/SettingsLayout.vue'
 import { notify } from '@kyvg/vue3-notification'
-import { ExclamationCircleIcon } from '@heroicons/vue/20/solid'
+import { AlertCircle } from 'lucide-vue-next'
 import Modal from '../../Components/Modal.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   initialTwoFactorEnabled: {
@@ -915,7 +883,7 @@ const deleteKey = () => {
   errors.value = {}
 
   if (!deleteKeyCurrentPassword.value) {
-    return (errors.value.deleteKey = 'Current password is required.')
+    return (errors.value.deleteKey = t('settings.security.passwordRequired'))
   }
 
   deleteKeyLoading.value = true
@@ -943,14 +911,14 @@ const deleteKey = () => {
           }
 
           keys.value = props.initialKeys
-          successMessage('Key Successfully Removed')
+          successMessage(t('settings.security.keyRemoved'))
         },
       })
     })
     .catch(error => {
       deleteKeyLoading.value = false
       if (error.response.status == 422) {
-        errors.value.deleteKey = 'The password is incorrect.'
+        errors.value.deleteKey = t('settings.security.passwordIncorrect')
       } else if (error.response !== undefined) {
         errorMessage(error.response.data)
       } else {
@@ -973,7 +941,7 @@ const enableKey = key => {
       },
     )
     .then(response => {
-      successMessage('Key Successfully Enabled')
+      successMessage(t('settings.security.keyEnabled'))
       key.enableKeyLoading = false
       key.enabled = true
     })
@@ -991,7 +959,7 @@ const disableKey = () => {
   errors.value = {}
 
   if (!disableKeyCurrentPassword.value) {
-    return (errors.value.disableKey = 'Current password is required.')
+    return (errors.value.disableKey = t('settings.security.passwordRequired'))
   }
 
   disableKeyLoading.value = true
@@ -1010,7 +978,7 @@ const disableKey = () => {
       let key = _.find(keys.value, ['id', keyToDisable.value.id])
       key.enabled = false
 
-      successMessage('Key Successfully Disabled')
+      successMessage(t('settings.security.keyDisabled'))
       disableKeyLoading.value = false
       disableKeyModalOpen.value = false
       keyToDisable.value = null
@@ -1019,7 +987,7 @@ const disableKey = () => {
     .catch(error => {
       disableKeyLoading.value = false
       if (error.response.status == 422) {
-        errors.value.disableKey = 'The password is incorrect.'
+        errors.value.disableKey = t('settings.security.passwordIncorrect')
       } else if (error.response !== undefined) {
         errorMessage(error.response.data)
       } else {
@@ -1032,26 +1000,26 @@ const clipboard = (str, success, error) => {
   // Needed as v-clipboard doesn't work inside modals!
   navigator.clipboard.writeText(str).then(
     () => {
-      successMessage('Copied to clipboard')
+      successMessage(t('common.copiedToClipboard'))
     },
     () => {
-      errorMessage('Could not copy to clipboard')
+      errorMessage(t('common.clipboardError'))
     },
   )
 }
 
 const successMessage = (text = '') => {
   notify({
-    title: 'Success',
+    title: t('common.success'),
     text: text,
     type: 'success',
   })
 }
 
-const errorMessage = (text = 'An error has occurred, please try again later') => {
+const errorMessage = (text = '') => {
   notify({
-    title: 'Error',
-    text: text,
+    title: t('common.error'),
+    text: text || t('common.errorDefault'),
     type: 'error',
   })
 }

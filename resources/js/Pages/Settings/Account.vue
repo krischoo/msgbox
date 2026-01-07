@@ -3,19 +3,17 @@
     <div class="divide-y divide-grey-200">
       <div class="py-10">
         <div class="space-y-1">
-          <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">Danger Zone</h3>
+          <h3 class="text-lg font-medium leading-6 text-grey-900 dark:text-white">{{
+            $t('settings.account.dangerZone')
+          }}</h3>
           <p class="text-base text-grey-700 dark:text-grey-200">
-            Once you delete your account, there is no going back.
-            <b>This username will not be able to be used again</b>. Please make sure you are
-            certain. Before deleting your account, please export any alias data or information that
-            you wish to retain. For more information on what happens when you delete your account
-            please see this
+            <span v-html="$t('settings.account.dangerZoneDesc')"></span>
             <a
               href="https://addy.io/faq/#what-happens-when-i-delete-my-account"
               rel="nofollow noopener noreferrer"
               target="_blank"
               class="text-indigo-700 cursor-pointer dark:text-indigo-400"
-              >FAQ item</a
+              >{{ $t('settings.account.faqLink') }}</a
             >.
           </p>
         </div>
@@ -26,7 +24,7 @@
                 <label
                   for="current-password-delete"
                   class="block text-sm font-medium leading-6 text-grey-600 dark:text-white"
-                  >Enter your password to confirm</label
+                  >{{ $t('settings.account.enterPasswordToConfirm') }}</label
                 >
                 <div class="relative mt-2">
                   <input
@@ -52,7 +50,7 @@
                     v-if="deleteAccountForm.errors.password"
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                   >
-                    <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                    <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                   </div>
                 </div>
                 <p
@@ -69,7 +67,7 @@
               type="submit"
               class="text-white font-bold bg-red-500 hover:bg-red-600 w-full py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Delete Account
+              {{ $t('settings.account.deleteAccount') }}
             </button>
           </form>
         </div>
@@ -77,11 +75,9 @@
     </div>
 
     <Modal :open="deleteAccountModalOpen" @close="deleteAccountModalOpen = false">
-      <template v-slot:title> Delete Account </template>
+      <template v-slot:title>{{ $t('settings.account.deleteAccount') }}</template>
       <template v-slot:content>
-        <p class="mt-4 text-grey-700 dark:text-grey-200">
-          Are you sure you want to <b>permanently</b> delete your account and any aliases you've
-          created?
+        <p class="mt-4 text-grey-700 dark:text-grey-200" v-html="$t('settings.account.deleteConfirm')">
         </p>
         <div class="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           <button
@@ -90,14 +86,14 @@
             class="px-4 py-3 text-white font-semibold bg-red-500 hover:bg-red-600 border border-transparent rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
             :disabled="deleteAccountForm.processing"
           >
-            Delete Account
+            {{ $t('settings.account.deleteAccount') }}
             <loader v-if="deleteAccountForm.processing" />
           </button>
           <button
             @click="deleteAccountModalOpen = false"
             class="px-4 py-3 text-grey-800 font-semibold bg-white hover:bg-grey-50 dark:text-grey-100 dark:hover:bg-grey-700 dark:bg-grey-600 dark:border-grey-700 border border-grey-100 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </template>
@@ -105,12 +101,15 @@
   </SettingsLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import SettingsLayout from './../../Layouts/SettingsLayout.vue'
 import { ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import Modal from '../../Components/Modal.vue'
-import { ExclamationCircleIcon } from '@heroicons/vue/20/solid'
+import { AlertCircle } from 'lucide-vue-next'
+
+const { t } = useI18n()
 
 const deleteAccountModalOpen = ref(false)
 
@@ -120,7 +119,7 @@ const deleteAccountForm = useForm({
 
 const confirmDeleteAccount = () => {
   if (!deleteAccountForm.password) {
-    deleteAccountForm.setError('password', 'The password field is required.')
+    deleteAccountForm.setError('password', t('settings.account.passwordRequired'))
   } else {
     deleteAccountModalOpen.value = true
   }

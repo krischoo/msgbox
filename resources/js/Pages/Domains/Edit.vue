@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Head title="Edit Domain" />
-    <h1 id="primary-heading" class="sr-only">Edit Domain</h1>
+    <Head :title="$t('domains.edit')" />
+    <h1 id="primary-heading" class="sr-only">{{ $t('domains.edit') }}</h1>
 
     <div class="sm:flex sm:items-center mb-6">
       <div class="sm:flex-auto">
-        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">Edit Domain</h1>
-        <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">Make changes to your Domain</p>
+        <h1 class="text-2xl font-semibold text-grey-900 dark:text-white">{{ $t('domains.edit') }}</h1>
+        <p class="mt-2 text-sm text-grey-700 dark:text-grey-200">{{ $t('domains.editDesc') }}</p>
       </div>
     </div>
 
@@ -28,7 +28,7 @@
               <svg
                 v-if="domain.domain_sending_verified_at && domain.domain_mx_validated_at"
                 class="h-5 w-5 inline-block tooltip"
-                data-tippy-content="Domain fully verified"
+                :data-tippy-content="$t('domains.fullyVerified')"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
               >
@@ -48,7 +48,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 class="h-5 w-5 inline-block tooltip"
-                data-tippy-content="MX records invalid"
+                :data-tippy-content="$t('domains.mxInvalid')"
               >
                 <g fill="none" fill-rule="evenodd">
                   <circle cx="10" cy="10" r="10" fill="#FF9B9B"></circle>
@@ -73,7 +73,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 class="h-5 w-5 inline-block tooltip"
-                data-tippy-content="DNS records for sending invalid"
+                :data-tippy-content="$t('domains.dnsInvalid')"
               >
                 <g fill="none" fill-rule="evenodd">
                   <circle cx="10" cy="10" r="10" fill="#FF9B9B"></circle>
@@ -101,26 +101,22 @@
         </div>
         <div class="pt-8">
           <div class="block text-lg font-medium text-grey-700 dark:text-grey-200">
-            Domain 'From Name'
+            {{ $t('domains.fromNameTitle') }}
           </div>
           <p class="mt-1 text-base text-grey-700 dark:text-grey-200">
-            The 'From Name' is shown when you send an email from an alias or reply anonymously to a
-            forwarded email. If left blank, then the email alias itself will be used as the 'From
-            Name' e.g. "example@{{ domain.domain }}".
+            {{ $t('domains.fromNameDesc1', { example: `example@${domain.domain}` }) }}
           </p>
           <div class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            The 'From Name' that is used for an alias is determined by the following
-            <b>priority</b>:
+            {{ $t('domains.fromNamePriority') }}
 
             <ul class="list-decimal list-inside text-grey-700 text-base mt-2 dark:text-grey-200">
-              <li>Alias 'From Name'</li>
-              <li>Username or <b>Custom Domain 'From Name'</b></li>
-              <li>Global 'From Name' from the settings page</li>
+              <li>{{ $t('domains.fromNamePriority1') }}</li>
+              <li><b>{{ $t('domains.fromNamePriority2') }}</b></li>
+              <li>{{ $t('domains.fromNamePriority3') }}</li>
             </ul>
           </div>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            If you set the 'From Name' for this domain, it will override the global 'From Name'
-            setting.
+            {{ $t('domains.fromNameOverride') }}
           </p>
 
           <div class="mb-6">
@@ -128,7 +124,7 @@
               <label
                 for="from_name"
                 class="block text-sm font-medium leading-6 text-grey-900 dark:text-white"
-                >From Name</label
+                >{{ $t('domains.fromName') }}</label
               >
               <div class="relative mt-2">
                 <input
@@ -150,7 +146,7 @@
                   v-if="errors.from_name"
                   class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                 >
-                  <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                  <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                 </div>
               </div>
               <p v-if="errors.from_name" class="mt-2 text-sm text-red-600" id="from-name-error">
@@ -164,41 +160,37 @@
             :disabled="domain.fromNameLoading"
             class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
           >
-            Update From Name
+            {{ $t('domains.updateFromName') }}
             <loader v-if="domain.fromNameLoading" />
           </button>
         </div>
 
         <div class="pt-8">
           <div class="block text-lg font-medium text-grey-700 dark:text-grey-200">
-            Alias Auto Create Regex
+            {{ $t('domains.autoCreateRegexTitle') }}
           </div>
           <p class="mt-1 text-base text-grey-700 dark:text-grey-200">
-            If you wish to create aliases on-the-fly but don't want to enable catch-all then you can
-            enter a regular expression pattern below. If a new alias' local part matches the pattern
-            then it will still be created on-the-fly even though catch-all is disabled.
+            {{ $t('domains.autoCreateRegexDesc1') }}
           </p>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            Note: <b>Catch-All must be disabled</b> to use alias automatic creation with regex.
+            {{ $t('domains.autoCreateRegexNote') }}
           </p>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            For example, if you only want aliases that start with "prefix" to be automatically
-            created, use the regex
+            {{ $t('domains.autoCreateRegexExample1') }}
             <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">^prefix</span>
           </p>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            If you only want aliases that end with "suffix" to be automatically created, use the
-            regex <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">suffix$</span>
+            {{ $t('domains.autoCreateRegexExample2') }}
+            <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">suffix$</span>
           </p>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            If you want to make sure the local part is fully matched you can start your regex with
-            <span class="bg-cyan-200 px-1 rounded-m dark:text-grey-900">^</span> and end it with
-            <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">$</span> e.g.
+            {{ $t('domains.autoCreateRegexExample3') }}
+            <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">^</span>
+            <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">$</span>
             <span class="bg-cyan-200 px-1 rounded-md dark:text-grey-900">^prefix.*suffix$</span>
-            which would match "prefix-anything-here-suffix"
           </p>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            You can use
+            {{ $t('domains.autoCreateRegexHelp') }}
             <a
               href="https://regex101.com/"
               class="text-indigo-800"
@@ -206,7 +198,6 @@
               rel="nofollow noreferrer noopener"
               >regex101.com</a
             >
-            to help you write your regular expressions.
           </p>
 
           <div class="mb-6">
@@ -214,7 +205,7 @@
               <label
                 for="auto_create_regex"
                 class="block text-sm font-medium leading-6 text-grey-900 dark:text-white"
-                >Auto Create Regex</label
+                >{{ $t('domains.autoCreateRegex') }}</label
               >
               <div class="relative mt-2">
                 <input
@@ -236,7 +227,7 @@
                   v-if="errors.auto_create_regex"
                   class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                 >
-                  <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                  <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                 </div>
               </div>
               <p
@@ -254,26 +245,25 @@
             :disabled="domain.autoCreateRegexLoading"
             class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
           >
-            Update Auto Create Regex
+            {{ $t('domains.updateAutoCreateRegex') }}
             <loader v-if="domain.autoCreateRegexLoading" />
           </button>
 
           <div class="block text-lg font-medium text-grey-700 pt-8 dark:text-grey-200">
-            Test Alias Auto Create Regex
+            {{ $t('domains.testAutoCreateRegexTitle') }}
           </div>
           <p class="mt-1 text-base text-grey-700 dark:text-grey-200">
-            You can test whether an alias local part will match the above regex pattern and be
-            automatically created by entering the local part (left of @ symbol) below.
+            {{ $t('domains.testAutoCreateRegexDesc1') }}
           </p>
           <p class="mt-2 text-base text-grey-700 dark:text-grey-200">
-            No aliases will be created when testing.
+            {{ $t('domains.testAutoCreateRegexDesc2') }}
           </p>
           <div class="mb-6">
             <div class="mt-6 grid grid-cols-1 mb-4">
               <label
                 for="auto_create_regex"
                 class="block text-sm font-medium leading-6 text-grey-900 dark:text-white"
-                >Alias Local Part</label
+                >{{ $t('domains.aliasLocalPart') }}</label
               >
 
               <div class="mt-2">
@@ -297,13 +287,13 @@
                       "
                       class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                     >
-                      <ExclamationCircleIcon class="h-5 w-5 text-red-500" aria-hidden="true" />
+                      <AlertCircle class="h-5 w-5 text-red-500" aria-hidden="true" />
                     </div>
                     <div
                       v-if="domain.testAutoCreateRegexSuccess === true"
                       class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3"
                     >
-                      <CheckCircleIcon class="h-5 w-5 text-green-500" aria-hidden="true" />
+                      <CheckCircle class="h-5 w-5 text-green-500" aria-hidden="true" />
                     </div>
                   </div>
                   <span
@@ -324,14 +314,14 @@
                 class="mt-2 text-sm text-red-600"
                 id="test-auto-create-regex-local-part-error"
               >
-                The alias local part does not match the regular expression and would not be created
+                {{ $t('domains.testRegexNoMatch') }}
               </p>
               <p
                 v-if="domain.testAutoCreateRegexSuccess === true"
                 class="mt-2 text-sm text-green-600"
                 id="test-auto-create-regex-local-part-error"
               >
-                The alias local part matches the regular expression and would be created
+                {{ $t('domains.testRegexMatch') }}
               </p>
             </div>
           </div>
@@ -341,7 +331,7 @@
             :disabled="domain.testAutoCreateRegexLoading"
             class="bg-cyan-400 w-full hover:bg-cyan-300 text-cyan-900 font-bold py-3 px-4 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:cursor-not-allowed"
           >
-            Test Auto Create Regex
+            {{ $t('domains.testAutoCreateRegex') }}
             <loader v-if="domain.testAutoCreateRegexLoading" />
           </button>
         </div>
@@ -350,7 +340,7 @@
           <span
             class="mt-2 text-sm text-grey-500 tooltip dark:text-grey-300"
             :data-tippy-content="$filters.formatDate(domain.updated_at)"
-            >Last updated {{ $filters.timeAgo(domain.updated_at) }}.</span
+            >{{ $t('domains.lastUpdated', { time: $filters.timeAgo(domain.updated_at) }) }}</span
           >
         </div>
       </div>
@@ -358,13 +348,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref, computed } from 'vue'
 import { Head } from '@inertiajs/vue3'
+import { useI18n } from 'vue-i18n'
 import { notify } from '@kyvg/vue3-notification'
 import { roundArrow } from 'tippy.js'
 import tippy from 'tippy.js'
-import { ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/vue/20/solid'
+import { AlertCircle, CheckCircle } from 'lucide-vue-next'
+
+const { t } = useI18n()
 
 const props = defineProps({
   initialDomain: {
