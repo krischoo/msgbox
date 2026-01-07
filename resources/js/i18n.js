@@ -6,13 +6,20 @@ import en from './locales/en.json'
  * 브라우저 언어 감지 및 i18n 초기화
  *
  * 우선순위:
- * 1. 로그인된 사용자의 저장된 locale (Inertia props에서 전달)
+ * 1. localStorage에 저장된 locale
  * 2. 브라우저 언어 설정
  * 3. 기본값 'ko'
  */
-const browserLocale = navigator.language.split('-')[0]
 const supportedLocales = ['ko', 'en']
-const defaultLocale = supportedLocales.includes(browserLocale) ? browserLocale : 'ko'
+const savedLocale = localStorage.getItem('locale')
+const browserLocale = navigator.language.split('-')[0]
+
+let defaultLocale = 'ko'
+if (savedLocale && supportedLocales.includes(savedLocale)) {
+  defaultLocale = savedLocale
+} else if (supportedLocales.includes(browserLocale)) {
+  defaultLocale = browserLocale
+}
 
 const i18n = createI18n({
   legacy: false, // Composition API 사용
