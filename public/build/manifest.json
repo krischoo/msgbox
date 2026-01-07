@@ -4,18 +4,18 @@
     "name": "webauthn"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Dz97GylJ.css",
+    "file": "assets/app-DNscHDcU.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-3fU4sMDX.js",
+    "file": "assets/app-Csidhz3-.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
       "assets/app-CG_-M7cS.css",
-      "assets/app-Dz97GylJ.css"
+      "assets/app-DNscHDcU.css"
     ]
   },
   "resources/js/webauthn/authenticate.js": {
